@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>匿影Gal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="src/css/styles.css">
+</head>
+<body class="bg-gray-50 h-screen flex flex-col relative">
+
+    <header class="fixed top-0 w-full z-40 px-5 py-3 flex items-center justify-center h-16 bg-transparent">
+        <h1 class="text-lg font-bold tracking-tight absolute left-5">匿影Gal</h1>
+        <div class="relative w-full max-w-2xl mx-auto">
+            <div class="flex items-center rounded-full px-4 py-2 w-full glass-card shadow-sm relative">
+                <i class="ri-search-2-line text-gray-500 dark:text-gray-400 mr-2"></i>
+                <!-- 简化的搜索框高亮实现 -->
+                <input type="text" id="header-search" placeholder="搜索游戏、分类或作者..." class="flex-1 bg-transparent outline-none text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 relative z-10">
+                <button onclick="alert('搜索功能需接入后台')" class="bg-pink-600 text-white text-sm px-4 py-1.5 rounded-full btn-active">搜索</button>
+            </div>
+            <!-- 搜索联想结果容器 -->
+            <div id="search-suggestions" class="absolute left-0 right-0 mt-1 rounded-xl glass-card shadow-lg overflow-hidden hidden z-50"></div>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto hide-scrollbar pt-4 pb-24 px-4" id="main-container">
+        </main>
+
+    <nav class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-40 glass-card rounded-full flex justify-around items-center h-16 px-6 max-w-md w-full">
+        <button onclick="router.push('home')" class="nav-item group w-full h-full flex flex-col items-center justify-center text-black/40 hover:text-black transition-colors" data-target="home">
+            <i class="ri-home-4-line text-2xl mb-1 group-[.active]:font-bold transition-transform"></i>
+            <span class="text-[10px] font-medium">主页</span>
+        </button>
+        <button onclick="router.push('category')" class="nav-item group w-full h-full flex flex-col items-center justify-center text-black/40 hover:text-black transition-colors" data-target="category">
+            <i class="ri-apps-line text-2xl mb-1 transition-transform"></i>
+            <span class="text-[10px] font-medium">分类</span>
+        </button>
+        <button onclick="router.push('galgame')" class="nav-item group w-full h-full flex flex-col items-center justify-center text-black/40 hover:text-black transition-colors" data-target="galgame">
+            <i class="ri-compass-3-line text-2xl mb-1 transition-transform"></i>
+            <span class="text-[10px] font-medium">引力搜索</span>
+        </button>
+        <button onclick="router.push('profile')" class="nav-item group w-full h-full flex flex-col items-center justify-center text-black/40 hover:text-black transition-colors" data-target="profile">
+            <i class="ri-user-smile-line text-2xl mb-1 transition-transform"></i>
+            <span class="text-[10px] font-medium">我的</span>
+        </button>
+    </nav>
+    
+    <!-- 主题切换按钮 -->
+    <button onclick="ThemeManager.toggleTheme()" id="theme-toggle" class="fixed bottom-20 left-4 w-12 h-12 rounded-full glass-card flex items-center justify-center btn-active cursor-pointer z-50 hover:scale-110 transition-transform">
+        <i id="theme-icon" class="ri-sun-line text-xl"></i>
+    </button>
+
+    <script type="module" src="src/js/app.js"></script>
+</body>
+</html>
