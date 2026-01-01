@@ -41,6 +41,15 @@ export const ThemeManager = {
         if (icon) {
             icon.className = theme === 'light' ? 'ri-moon-line text-xl' : 'ri-sun-line text-xl';
         }
+        
+        // 更新 Cloudflare Turnstile 主题
+        if (window.turnstile) {
+            const turnstileWidgets = document.querySelectorAll('.cf-turnstile');
+            turnstileWidgets.forEach(widget => {
+                // 重新渲染 Turnstile 组件以应用新主题
+                window.turnstile.reset(widget);
+            });
+        }
     },
     
     /**
@@ -70,6 +79,16 @@ export const ThemeManager = {
         if (theme === 'dark') {
             document.body.classList.add('dark');
         }
+        
+        // 更新主题图标
         this.updateThemeIcon(theme);
+        
+        // 初始化时更新Turnstile主题
+        setTimeout(() => {
+            const turnstileWidgets = document.querySelectorAll('.cf-turnstile');
+            turnstileWidgets.forEach(widget => {
+                widget.setAttribute('data-theme', theme);
+            });
+        }, 100);
     }
 };

@@ -158,9 +158,9 @@ export const Pages = {
     profile: (animationClass = 'animate-fade-in') => {
         if (!DB.user) {
             return `
-                <div class="${authFlowState.step === 2 ? 'animate-fade-in-right ' : (animationClass ? animationClass + ' ' : '')}flex flex-col items-center justify-center min-h-[60vh] px-4 pt-20">
+                <div class="flex flex-col items-center justify-center min-h-[60vh] px-4 pt-20">
                     <h2 class="text-2xl font-bold mb-8">匿影通行证</h2>
-                    <div class="glass-card responsive-card flex flex-col space-y-4">
+                    <div class="${authFlowState.step === 2 ? 'animate-fade-in-right ' : (authFlowState.step === 1 ? 'animate-slide-in-left ' : (animationClass ? animationClass + ' ' : ''))}glass-card responsive-card flex flex-col space-y-4">
                         <!-- 步骤指示器 -->
                         <div class="flex items-center justify-center gap-2 text-xs text-gray-500">
                             <div class="flex items-center gap-1 ${authFlowState.step >= 1 ? 'text-pink-600' : ''}">
@@ -219,10 +219,9 @@ export const Pages = {
                                 <p id="pwd-match-error" class="text-[10px] text-red-500 bg-red-50/50 dark:bg-red-900/20 rounded-md p-2 hidden mt-1">两次输入的密码不一致</p>
                             </div>` : ''}
                             
-                            <!-- 人机验证 -->
-                            <div class="mt-6 border border-gray-200 bg-gray-50 rounded h-14 flex items-center justify-center gap-2 cursor-pointer hover:bg-gray-100 btn-active" onclick="this.style.borderColor='#ec4899'">
-                                <div class="w-4 h-4 border-2 border-gray-300 rounded-sm"></div>
-                                <span class="text-xs text-gray-500">I am human (Cloudflare)</span>
+                            <!-- Cloudflare Turnstile 人机验证 -->
+                            <div class="mt-6 flex justify-center">
+                                <div class="cf-turnstile" data-sitekey="0x4AAAAAACJ_rMxcCB0FrOve" data-theme="light"></div>
                             </div>
 
                             <button id="auth-action-btn" onclick="Actions.handleAuthStep()" class="mt-8 w-full bg-pink-600 text-white py-4 rounded-xl font-bold shadow-lg shadow-pink-600/20 btn-active" disabled>
@@ -411,7 +410,16 @@ function render() {
             container.innerHTML = contentWithoutAnimation;
             // 滑动切换结束后，绑定profile页面的事件
             if (router.current === 'profile') {
-                setTimeout(bindPasswordCheck, 10);
+                setTimeout(() => {
+                    bindPasswordCheck();
+                    // 手动渲染Turnstile组件
+                    if (window.turnstile) {
+                        window.turnstile.render('.cf-turnstile', {
+                            sitekey: '0x4AAAAAACJ_rMxcCB0FrOve',
+                            theme: document.body.classList.contains('dark') ? 'dark' : 'light'
+                        });
+                    }
+                }, 10);
             }
         }, 500); // 500ms 与动画时长一致
     } else {
@@ -419,7 +427,16 @@ function render() {
         container.innerHTML = newContent;
         // 直接替换内容后，绑定profile页面的事件
         if (router.current === 'profile') {
-            setTimeout(bindPasswordCheck, 10);
+            setTimeout(() => {
+                bindPasswordCheck();
+                // 手动渲染Turnstile组件
+                if (window.turnstile) {
+                    window.turnstile.render('.cf-turnstile', {
+                        sitekey: '0x4AAAAAACJ_rMxcCB0FrOve',
+                        theme: document.body.classList.contains('dark') ? 'dark' : 'light'
+                    });
+                }
+            }, 10);
         }
     }
 }
@@ -666,6 +683,16 @@ export const Actions = {
         import('./utils.js').then(({ checkPasswordValidity, showNotification }) => {
             const { email, isRegistered } = authFlowState;
             const pwd1 = document.getElementById('auth-pwd1').value;
+            
+            // 验证 Cloudflare Turnstile
+            if (window.turnstile) {
+                const token = window.turnstile.getResponse();
+                if (!token) {
+                    showNotification("请完成人机验证", 'error');
+                    return;
+                }
+                // --- ⚠️ 真实服务器部署时，需将 token 发送到服务器验证 ---
+            }
             
             const authButton = document.getElementById('auth-action-btn');
             authButton.innerText = "处理中...";
