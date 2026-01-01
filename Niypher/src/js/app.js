@@ -52,6 +52,7 @@ function initApp() {
 window.router = router;
 window.Actions = Actions;
 window.closeAnnouncement = closeAnnouncement;
+window.ThemeManager = ThemeManager;
 
 // 页面加载完成后初始化应用
 window.addEventListener('load', initApp);

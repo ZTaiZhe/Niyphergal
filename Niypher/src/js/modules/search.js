@@ -245,34 +245,17 @@ export const SearchSuggestion = {
         items.forEach((item, index) => {
             if (index === this.currentIndex) {
                 item.classList.add('bg-pink-50', 'dark:bg-pink-900/30', 'font-medium');
-                
-                // 计算并设置竖条位置
-                const rect = item.getBoundingClientRect();
-                const containerRect = suggestionContainer.getBoundingClientRect();
-                const top = rect.top - containerRect.top + rect.height / 2;
-                
-                // 直接修改样式，实现平滑平移
-                suggestionContainer.style.setProperty('--bar-top', `${top}px`);
-                
-                // 添加选中项类，展开竖条
-                suggestionContainer.classList.add('has-selected-item');
             } else {
                 item.classList.remove('bg-pink-50', 'dark:bg-pink-900/30', 'font-medium');
             }
         });
         
-        // 当没有选中项时，执行消失逻辑
+        // 当没有选中项时，移除所有选中状态
         if (this.currentIndex === -1) {
             // 移除所有选中状态
             items.forEach(item => {
                 item.classList.remove('bg-pink-50', 'dark:bg-pink-900/30', 'font-medium');
             });
-            
-            // 移除选中项类，收缩竖条
-            suggestionContainer.classList.remove('has-selected-item');
-            
-            // 重置CSS变量
-            suggestionContainer.style.removeProperty('--bar-top');
         }
     },
     

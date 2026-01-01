@@ -411,33 +411,7 @@ body.dark .nav-item.active i[class^="ri-"] {
     position: relative;
 }
 
-/* 全局焦点竖条 */
-#search-suggestions::before {
-    content: '';
-    position: absolute;
-    left: 1rem;
-    width: 4px;
-    height: 0;
-    background-color: var(--accent-color);
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 10;
-}
 
-/* 搜索结果容器显示且有选中项时，显示竖条并定位 */
-#search-suggestions:not(.hidden)::before {
-    opacity: 1;
-    transform: translateY(calc(var(--bar-top, -100%) - 50%));
-}
-
-/* 当没有--bar-top变量时，竖条完全消失 */
-#search-suggestions:not(.hidden):not([style*="--bar-top"])::before {
-    opacity: 0;
-}
 
 /* 确保搜索框位置稳定，联想栏与搜索栏保持适当间距 */
 #search-suggestions {
@@ -601,9 +575,7 @@ body.dark .search-suggestion-item {
     color: var(--dark-text-primary);
 }
 
-body.dark #search-suggestions::before {
-    background-color: #f472b6;
-}
+
 
 /* 滚动条样式 */
 #search-suggestions::-webkit-scrollbar {
