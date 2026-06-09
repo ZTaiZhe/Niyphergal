@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260609_4)
+- **时间**: 2026-06-10 02:04 CST
+- **Commit**: 68364d4 - Merge branch 'main' of https://github.com/ZTaiZhe/Niyphergal
+- **构建产物**: 5.1M
+- **变更**: Merge branch 'main' of https://github.com/ZTaiZhe/Niyphergal
+
+
 ## Alpha 0.0.1 (build_260609_3)
 - **时间**: 2026-06-10 01:58 CST
 - **Commit**: 456c84f - fix: release job pull latest commit before creating tag
