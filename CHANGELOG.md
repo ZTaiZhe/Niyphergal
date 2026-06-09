@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.2 (build_260609_1)
+- **时间**: 2026-06-10 00:49 CST
+- **Commit**: b343dda - feat!: remove dot folders and wrangler files from tracking, add release job to CI
+- **构建产物**: 5.1M
+- **变更**: feat!: remove dot folders and wrangler files from tracking, add release job to CI
+
+
 ## Alpha 0.0.1 (build_260609_8)
 - **时间**: 2026-06-10 00:22 CST
 - **Commit**: 441bc25 - chore: full pipeline test - verify CI/CD end-to-end
