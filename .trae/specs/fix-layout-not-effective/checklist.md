@@ -1,0 +1,6 @@
+- [x] 桌面浏览器显示底部浮动毛玻璃导航栏（非侧边 NavigationRail）
+- [x] 首页顶部显示包含 Logo 和搜索栏的标题栏
+- [x] 卡片高度为 256px（匹配 React 版 h-64）
+- [x] 卡片图片正确加载并显示
+- [x] `flutter analyze lib` 无错误
+- [x] 部署后页面视觉与 React 版基本一致（已部署至 https://f1175e1c.niyphergal.pages.dev，需人工确认）

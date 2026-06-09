@@ -1,0 +1,457 @@
+/* Animations: hero transition, FLIP, logo morph, liquid glass, shimmer */
+/* ============================================ Detail Page 5-Layer Stagger ============================================ */
+.detail-stagger-layer { opacity: 0; transform: translateY(20px); }
+.detail-stagger-layer.is-visible { opacity: 1; transform: translateY(0); transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
+.detail-layer-delay-0 { transition-delay: 0ms; }
+.detail-layer-delay-1 { transition-delay: 50ms; }
+.detail-layer-delay-2 { transition-delay: 100ms; }
+.detail-layer-delay-3 { transition-delay: 150ms; }
+.detail-layer-delay-4 { transition-delay: 200ms; }
+
+/* ============================================ Hero Transition ============================================ */
+.hero-clone {
+    position: fixed;
+    z-index: 9998;
+    pointer-events: none;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    will-change: left, top, width, height, border-radius;
+}
+.hero-clone-content {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    will-change: transform;
+    background: var(--bg-secondary);
+}
+
+.detail-hero-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 1rem;
+    background: var(--bg-secondary);
+    box-shadow: var(--acrylic-shadow);
+}
+
+/* ============================================ FLIP Refresh ============================================ */
+.game-cards-container .glass-card.flip-card { transition: transform 0.4s linear; }
+@keyframes viewerSpin {
+    to { transform: rotate(360deg); }
+}
+
+.carousel-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    user-select: none;
+    border-radius: 1rem;
+}
+
+.carousel-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.carousel-slide-active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+
+.carousel-slide-clickable {
+    cursor: pointer;
+}
+
+.carousel-kenburns {
+    position: absolute;
+    inset: 0;
+}
+
+.carousel-bg-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.carousel-bg-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6));
+}
+
+.carousel-diagonal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 500px;
+    height: 100%;
+    background: white;
+    opacity: 0;
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.carousel-gradient-mask {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 14rem;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.carousel-gradient-mask-blur {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+}
+
+.carousel-gradient-mask-layers {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 150% 80% at 50% 120%, rgba(13,18,22,0.98) 0%, rgba(13,18,22,0.6) 50%, transparent 80%),
+                radial-gradient(ellipse 120% 70% at 25% 100%, rgba(13,18,22,0.5) 0%, transparent 65%),
+                radial-gradient(ellipse 120% 70% at 75% 100%, rgba(13,18,22,0.5) 0%, transparent 65%),
+                linear-gradient(to bottom, transparent 0%, rgba(13,18,22,0.2) 40%, rgba(13,18,22,0.9) 85%, #0d1216 100%);
+}
+
+.dark .carousel-gradient-mask-layers {
+    background: radial-gradient(ellipse 150% 80% at 50% 120%, rgba(5,8,12,0.98) 0%, rgba(5,8,12,0.6) 50%, transparent 80%),
+                radial-gradient(ellipse 120% 70% at 25% 100%, rgba(5,8,12,0.5) 0%, transparent 65%),
+                radial-gradient(ellipse 120% 70% at 75% 100%, rgba(5,8,12,0.5) 0%, transparent 65%),
+                linear-gradient(to bottom, transparent 0%, rgba(5,8,12,0.2) 40%, rgba(5,8,12,0.9) 85%, #05080c 100%);
+}
+
+.carousel-gradient-mask-frost {
+    position: absolute;
+    inset: 0;
+    opacity: 0.3;
+    background: radial-gradient(circle at 15% 70%, rgba(255,255,255,0.4) 0%, transparent 25%),
+                radial-gradient(circle at 85% 75%, rgba(255,255,255,0.3) 0%, transparent 20%),
+                radial-gradient(circle at 50% 90%, rgba(255,255,255,0.5) 0%, transparent 30%);
+}
+
+.carousel-content {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 6rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    z-index: 10;
+}
+
+@media (min-width: 768px) {
+    .carousel-content {
+        padding-bottom: 8rem;
+        padding-left: 5rem;
+        padding-right: 5rem;
+    }
+}
+
+.carousel-content-inner {
+    max-width: 42rem;
+    z-index: 20;
+}
+
+.carousel-subtitle-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.carousel-accent-line {
+    height: 1px;
+    background: rgba(255,255,255,0.4);
+    width: 0;
+}
+
+.carousel-subtitle {
+    font-size: 1.125rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.025em;
+    margin: 0;
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.carousel-title {
+    font-size: 2.5rem;
+    letter-spacing: -0.025em;
+    color: white;
+    margin: 0 0 1rem 0;
+    line-height: 1.1;
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+@media (min-width: 768px) {
+    .carousel-title {
+        font-size: 4.5rem;
+    }
+}
+
+.carousel-desc {
+    font-size: 1.125rem;
+    color: rgba(255,255,255,0.7);
+    max-width: 32rem;
+    margin: 0 0 2rem 0;
+    line-height: 1.6;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+@media (min-width: 768px) {
+    .carousel-desc {
+        font-size: 1.25rem;
+    }
+}
+
+.carousel-cta-row {
+    display: flex;
+    gap: 1rem;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.carousel-cta-primary {
+    padding: 0.875rem 2rem;
+    background: white;
+    color: black;
+    border-radius: 9999px;
+    border: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.carousel-cta-primary:hover {
+    background: rgba(255,255,255,0.9);
+}
+
+.carousel-cta-secondary {
+    padding: 0.875rem 2rem;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    border-radius: 9999px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.carousel-cta-secondary:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.carousel-arrow:hover {
+    background: rgba(0,0,0,0.3);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-arrow:active {
+    transform: translateY(-50%) scale(0.9);
+}
+
+.carousel-arrow-left {
+    left: 1rem;
+}
+
+@media (min-width: 768px) {
+    .carousel-arrow-left {
+        left: 2rem;
+    }
+}
+
+.carousel-arrow-right {
+    right: 1rem;
+}
+
+@media (min-width: 768px) {
+    .carousel-arrow-right {
+        right: 2rem;
+    }
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.carousel-dot {
+    height: 6px;
+    border-radius: 9999px;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255,255,255,0.4);
+    width: 6px;
+}
+
+.carousel-dot-active {
+    width: 2rem;
+    background: white;
+}
+
+/* Card text fade-in after card transition */
+.game-cards-container .glass-card.is-hidden .card-text-container {
+    opacity: 0;
+}
+.game-cards-container .glass-card.is-loaded .card-text-container {
+    opacity: 1;
+    transition: opacity 0.35s ease-out;
+    transition-delay: calc(var(--stagger-index) * 50ms + 0.2s);
+}
+
+/* ============================================ Liquid Glass: Solid Layer ============================================ */
+h1, h2, h3, h4,
+.carousel-title,
+.loader-title,
+.card-title-wrapper h3 {
+    opacity: var(--glass-opacity-title);
+}
+
+/* Body text at 70% */
+.text-secondary,
+.text-gray-400,
+.loader-state-desc,
+.carousel-desc {
+    opacity: var(--glass-opacity-body);
+}
+
+/* ============================================ Liquid Glass: Scroll Edge Fade ============================================ */
+#main-container {
+    mask-image: linear-gradient(to bottom, transparent 0%, black 28px, black calc(100% - 28px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 28px, black calc(100% - 28px), transparent 100%);
+}
+
+/* ============================================ Liquid Glass: Nav Inset ============================================ */
+nav.fixed.bottom-4.left-1\/2.transform.-translate-x-1\/2 {
+    bottom: 28px !important;
+}
+
+/* ============================================ Liquid Glass: Performance ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    body::before { animation: none !important; }
+
+    .acrylic-panel,
+    .glass-card,
+    .glass-card-pill {
+        transition-duration: 0.15s !important;
+    }
+
+    .game-cards-container .glass-card.flip-card {
+        transition-duration: 0.1s !important;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    body::before,
+    body::after { display: none !important; }
+}
+
+/* ============================================ Hero Title Clone ============================================ */
+.hero-clone-title {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    will-change: left, top, opacity, color, font-size, text-shadow;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+/* ============================================ Header Logo Morph (CSS transitions) ============================================ */
+.header-logo-btn {
+    transition: width 0.4s var(--ease-spring-smooth),
+                height 0.4s var(--ease-spring-smooth),
+                padding 0.4s var(--ease-spring-smooth),
+                border-radius 0.4s var(--ease-spring-smooth),
+                gap 0.4s var(--ease-spring-smooth);
+}
+.header-logo-text {
+    overflow: hidden;
+    transition: opacity 0.25s var(--ease-spring-smooth),
+                max-width 0.35s var(--ease-spring-smooth);
+}
+.header-logo-arrow {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+    transition: opacity 0.24s var(--ease-spring-smooth),
+                transform 0.24s var(--ease-spring-smooth);
+}
+.header-logo-back-icon {
+    transition: opacity 0.32s 0.14s var(--ease-spring-smooth),
+                transform 0.32s 0.14s var(--ease-spring-smooth);
+    opacity: 0;
+    transform: translateX(-10px) scale(0.3) rotate(-30deg);
+}
+
+body.is-detail-page .header-logo-btn {
+    padding: 0 !important;
+    width: 40px !important;
+    height: 40px !important;
+    justify-content: center;
+    position: relative;
+    gap: 0;
+    border-radius: 9999px;
+}
+body.is-detail-page .header-logo-text {
+    max-width: 0;
+    opacity: 0;
+}
+body.is-detail-page .header-logo-arrow {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.4);
+    position: absolute;
+    pointer-events: none;
+}
+body.is-detail-page .header-logo-back-icon {
+    display: block !important;
+    opacity: 1;
+    transform: translateX(0) scale(1) rotate(0deg);
+}

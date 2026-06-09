@@ -1,0 +1,113 @@
+﻿:root {
+    --app-height: 100dvh;
+    --font-base: clamp(14px, 1rem + 1vw, 18px);
+    --safe-bottom: max(env(safe-area-inset-bottom), 28px);
+    --safe-top: max(env(safe-area-inset-top), 0px);
+
+    --color-accent: #ec4899;
+    --color-accent-light: rgba(236, 72, 153, 0.1);
+    --color-accent-hover: #db2777;
+    --accent-color: #ec4899;
+    --accent-light: rgba(236, 72, 153, 0.1);
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+    --duration-fast: 150ms;
+    --duration-normal: 250ms;
+    --duration-slow: 350ms;
+
+    /* Liquid Glass spring easings via CSS linear() */
+    --ease-spring-smooth: linear(0, 0.006 2.9%, 0.059 9.7%, 0.202 18.8%, 0.504 33.6%, 0.748 49.8%, 0.873 60.9%, 0.944 72.4%, 0.98 84.3%, 0.997 95.7%, 1);
+    --ease-spring-bouncy: linear(0, 0.009 2.4%, 0.06 8%, 0.145 14.4%, 0.503 33.1%, 0.827 52.1%, 0.947 63.6%, 1);
+    --easing-default: var(--ease-spring-smooth);
+    --easing-spring: var(--ease-spring-bouncy);
+
+    /* Liquid Glass opacity hierarchy */
+    --glass-opacity-title: 1;
+    --glass-opacity-body: 0.7;
+    --glass-opacity-border: 0.4;
+    --glass-opacity-card: 0.2;
+
+    /* Animated background gradient */
+    --bg-gradient-1: #f0e6f6;
+    --bg-gradient-2: #e8f0f8;
+    --bg-gradient-3: #f5e6ef;
+
+    --card-glass-tint: rgba(255, 255, 255, 0.2);
+    --card-glass-tint-fade: rgba(255, 255, 255, 0);
+
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --shadow-color: rgba(0, 0, 0, 0.03);
+
+    --acrylic-blur: 16px;
+    --acrylic-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.45) 100%);
+    --acrylic-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.6) 100%);
+    --acrylic-border: rgba(255, 255, 255, 0.4);
+    --acrylic-border-hover: rgba(255, 255, 255, 0.55);
+    --acrylic-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --acrylic-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
+    --glass-bg: rgba(255, 255, 255, 0.2);
+    --card-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.12) 100%);
+    --card-glass-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.18) 100%);
+
+    --dark-border-color: rgba(255, 255, 255, 0.12);
+
+    --skel-base: rgba(255, 255, 255, 0.06);
+    --skel-scan: rgba(255, 255, 255, 0.04);
+}
+
+body.dark {
+    --bg-gradient-1: #0f0a1a;
+    --bg-gradient-2: #0a1422;
+    --bg-gradient-3: #120d1a;
+
+    --card-glass-tint: rgba(0, 0, 0, 0.2);
+    --card-glass-tint-fade: rgba(0, 0, 0, 0);
+
+    --bg-primary: #0f172a;
+    --color-accent: #f472b6;
+    --color-accent-light: rgba(244, 114, 182, 0.15);
+    --color-accent-hover: #db2777;
+    --accent-color: #f472b6;
+    --accent-light: rgba(244, 114, 182, 0.15);
+    --bg-secondary: #1e293b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-tertiary: #64748b;
+    --border-color: rgba(255, 255, 255, 0.08);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+
+    --acrylic-bg: linear-gradient(135deg, rgba(20, 20, 30, 0.75) 0%, rgba(12, 12, 20, 0.45) 100%);
+    --acrylic-bg-hover: linear-gradient(135deg, rgba(28, 28, 40, 0.88) 0%, rgba(18, 18, 28, 0.6) 100%);
+    --acrylic-border: rgba(255, 255, 255, 0.12);
+    --acrylic-border-hover: rgba(255, 255, 255, 0.18);
+    --acrylic-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --acrylic-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.5);
+    --glass-bg: rgba(15, 23, 42, 0.2);
+    --card-glass-bg: linear-gradient(135deg, rgba(15, 23, 42, 0.2) 0%, rgba(10, 16, 28, 0.12) 100%);
+    --card-glass-bg-hover: linear-gradient(135deg, rgba(20, 28, 48, 0.28) 0%, rgba(15, 20, 35, 0.18) 100%);
+
+    --dark-border-color: rgba(255, 255, 255, 0.12);
+
+    --skel-base: rgba(255, 255, 255, 0.06);
+    --skel-scan: rgba(255, 255, 255, 0.04);
+}

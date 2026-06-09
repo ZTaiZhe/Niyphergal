@@ -1,0 +1,55 @@
+const PINYIN_MAP = {
+    // First portion (basic characters)
+    '阿': 'a', '啊': 'a', '安': 'an', '爱': 'ai', '八': 'ba', '把': 'ba', '白': 'bai',
+    '百': 'bai', '北': 'bei', '本': 'ben', '不': 'bu', '才': 'cai', '成': 'cheng',
+    '出': 'chu', '大': 'da', '到': 'dao', '的': 'de', '地': 'de', '得': 'de',
+    '等': 'deng', '点': 'dian', '东': 'dong', '多': 'duo', '二': 'er', '发': 'fa',
+    '法': 'fa', '方': 'fang', '分': 'fen', '个': 'ge', '给': 'gei', '工': 'gong',
+    '过': 'guo', '还': 'hai', '好': 'hao', '和': 'he', '很': 'hen', '会': 'hui',
+    '家': 'jia', '见': 'jian', '进': 'jin', '就': 'jiu', '开': 'kai', '看': 'kan',
+    '来': 'lai', '老': 'lao', '里': 'li', '两': 'liang', '六': 'liu', '妈': 'ma',
+    '么': 'me', '没': 'mei', '美': 'mei', '们': 'men', '名': 'ming', '那': 'na',
+    '能': 'neng', '你': 'ni', '年': 'nian', '起': 'qi', '去': 'qu', '人': 'ren',
+    '日': 'ri', '三': 'san', '上': 'shang', '谁': 'shei', '什': 'shen', '生': 'sheng',
+    '时': 'shi', '事': 'shi', '是': 'shi', '说': 'shuo', '四': 'si', '他': 'ta',
+    '她': 'ta', '天': 'tian', '条': 'tiao', '同': 'tong', '外': 'wai', '为': 'wei',
+    '我': 'wo', '五': 'wu', '下': 'xia', '先': 'xian', '想': 'xiang', '小': 'xiao',
+    '些': 'xie', '写': 'xie', '心': 'xin', '新': 'xin', '学': 'xue', '一': 'yi',
+    '已': 'yi', '以': 'yi', '有': 'you', '又': 'you', '月': 'yue', '再': 'zai',
+    '在': 'zai', '怎': 'zen', '这': 'zhe', '真': 'zhen', '正': 'zheng', '知': 'zhi',
+    '中': 'zhong', '种': 'zhong', '着': 'zhe', '子': 'zi', '作': 'zuo', '做': 'zuo',
+
+    // Game/media specific terms
+    '游': 'you', '戏': 'xi', '动': 'dong', '漫': 'man', '画': 'hua', '音': 'yin',
+    '乐': 'yue', '影': 'ying', '视': 'shi', '剧': 'ju', '科': 'ke', '幻': 'huan',
+    '奇': 'qi', '冒': 'mao', '险': 'xian', '角': 'jiao', '色': 'se', '扮': 'ban',
+    '演': 'yan', '策': 'ce', '略': 'lue', '模': 'mo', '拟': 'ni', '射': 'she',
+    '击': 'ji', '竞': 'jing', '技': 'ji', '体': 'ti', '育': 'yu', '休': 'xiu',
+    '闲': 'xian', '益': 'yi', '智': 'zhi', '卡': 'ka', '牌': 'pai', '棋': 'qi',
+    '类': 'lei', '格': 'ge', '斗': 'dou', '战': 'zhan', '争': 'zheng', '恐': 'kong',
+    '怖': 'bu', '解': 'jie', '谜': 'mi', '文': 'wen', '字': 'zi', '恋': 'lian',
+    '养': 'yang', '节': 'jie', '奏': 'zou', '舞': 'wu', '蹈': 'dao', '沙': 'sha',
+    '盒': 'he', '放': 'fang', '世': 'shi', '界': 'jie', '平': 'ping', '台': 'tai',
+    '闯': 'chuang', '关': 'guan', '街': 'jie', '机': 'ji', '飞': 'fei', '行': 'xing',
+    '赛': 'sai', '车': 'che',
+
+    // Acronyms
+    'RPG': 'rpg', 'ARPG': 'arpg', 'SRPG': 'srpg', 'MMO': 'mmo', 'MMORPG': 'mmorpg',
+    'FPS': 'fps', 'TPS': 'tps', 'RTS': 'rts', 'MOBA': 'moba', 'AVG': 'avg',
+    'ADV': 'adv', 'GAL': 'gal', 'GALGAME': 'galgame', 'SLG': 'slg', 'ACT': 'act',
+    'FTG': 'ftg', 'STG': 'stg', 'PUZ': 'puz', 'RAC': 'rac', 'SPT': 'spt',
+    'ETC': 'etc', 'MUG': 'mug',
+
+    // Regional/Release terms
+    '国': 'guo', '韩': 'han', '欧': 'ou', '美': 'mei', '独': 'du', '立': 'li',
+    '经': 'jing', '典': 'dian', '续': 'xu', '重': 'chong', '制': 'zhi', '复': 'fu',
+    '刻': 'ke', '合': 'he', '集': 'ji', '部': 'bu', '曲': 'qu', '系': 'xi',
+    '列': 'lie', '传': 'zhuan', '物': 'wu', '语': 'yu', '故': 'gu', '篇': 'pian',
+    '章': 'zhang', '第': 'di', '七': 'qi', '九': 'jiu', '十': 'shi', '最': 'zui',
+    '终': 'zhong', '完': 'wan', '结': 'jie', '前': 'qian', '番': 'fan', '特': 'te',
+    '别': 'bie', '额': 'e', 'DLC': 'dlc', '扩': 'kuo', '展': 'zhan', '包': 'bao',
+    '资': 'zi', '源': 'yuan', '更': 'geng', '补': 'bu', '丁': 'ding', '修': 'xiu',
+    '版': 'ban', '增': 'zeng', '强': 'qiang', '豪': 'hao', '华': 'hua', '收': 'shou',
+    '藏': 'cang', '限': 'xian', '定': 'ding', '普': 'pu', '通': 'tong', '标': 'biao',
+    '准': 'zhun', '整': 'zheng', '黄': 'huang', '金': 'jin', '度': 'du', '极': 'ji'
+};

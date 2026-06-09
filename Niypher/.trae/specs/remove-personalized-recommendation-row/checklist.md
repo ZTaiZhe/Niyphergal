@@ -1,0 +1,12 @@
+- [x] EdgeRecommender 新增 scoreAllGames 方法，返回 Map<gameId, score>，无画像时所有分数为 0
+- [x] EdgeRecommender 新增 normalizeScore 方法，可将推荐分数归一化到 0-100 范围
+- [x] 首页不再渲染"为你推荐"个性推荐行（buildRecommendationRow 已移除）
+- [x] 首页 renderHome 中游戏卡片按推荐分数排序，无画像时按默认顺序
+- [x] 首页 refreshCards 使用推荐分数排序替代随机打乱，无画像时保留随机打乱
+- [x] 搜索结果默认排序融合推荐分数（relevanceScore * 0.7 + recommendScore * 0.3）
+- [x] 搜索结果手动排序（标题/日期）不受推荐分数影响
+- [x] 搜索无画像时仅按相关度排序（推荐权重为 0）
+- [x] CSS 中 .recommendation-* 相关样式已移除
+- [x] animationHelpers.js 中 .recommendation-card 选择器引用已清理
+- [x] app.js 中 edgeRecommender 功能开关条件判断已清理
+- [x] 首页和搜索页面功能正常，无 JS 运行时错误

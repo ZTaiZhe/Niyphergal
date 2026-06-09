@@ -1,0 +1,7 @@
+- [x] performHeroNavigate 将 sourceRect 和 sourceBorderRadius 存入 _heroExitContext
+- [x] performHeroExit frame 创建时设置 border-radius
+- [x] performHeroExit 使用预存坐标直接飞行，不等待 page:rendered
+- [x] keyframes 中 to 位置 borderRadius 使用存储值而非硬编码 '0.75rem'
+- [x] clone 飞行和页面渲染并行，无先后延迟
+- [x] 退出飞行过程中 clone 圆角全程可见
+- [x] 无 JS 运行时错误

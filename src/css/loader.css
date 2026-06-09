@@ -1,0 +1,24 @@
+/* Loading Screen */
+.app-loader{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;transition:opacity .5s ease,visibility .5s ease}
+.app-loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.loader-blur{position:absolute;inset:0;background:var(--bg-primary);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px)}
+body.dark .loader-blur{background:var(--bg-primary);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px)}
+.loader-content{position:relative;z-index:1;text-align:center;transition:opacity .3s ease}
+.loader-content.hidden{display:none}
+.loader-title span{display:inline-block;animation:loader-char-in .55s ease-out both;animation-delay:calc(var(--i, 0)*.06s + .1s)}
+@keyframes loader-char-in{0%{opacity:0;transform:translateY(12px);filter:blur(8px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+.loader-title-group{display:inline-block}.loader-progress{width:100%;height:3px;border-radius:2px;background:transparent;overflow:hidden;margin-top:20px}
+.loader-progress-fill{height:100%;width:0;background:#ec4899;border-radius:2px;transition:width .3s ease}
+.loader-title{font-family:Jost,sans-serif;font-size:clamp(2rem,6vw,4rem);font-weight:700;letter-spacing:-.02em;color:var(--text-primary);}
+.loader-icon-wrapper{margin-bottom:20px}
+.loader-state-icon{font-size:2.5rem;color:var(--text-tertiary);animation:loader-fade-in .6s ease-out}
+.loader-state-title{font-size:1.25rem;font-weight:600;color:var(--text-primary);margin-bottom:8px;animation:loader-fade-in .6s ease-out}
+.loader-state-desc{font-size:.9rem;color:var(--text-tertiary);margin-bottom:24px;animation:loader-fade-in .6s ease-out .1s both}
+.loader-retry-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:9999px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:.9rem;font-weight:500;cursor:pointer;transition:background .2s ease,border-color .2s ease;animation:loader-fade-in .6s ease-out .2s both}
+.loader-retry-btn:hover{background:var(--acrylic-bg);border-color:var(--acrylic-border)}
+.loader-retry-btn i{font-size:1.05rem}
+body.dark .loader-retry-btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)}
+body.dark .loader-retry-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
+@keyframes loader-fade-in{0%{opacity:0;transform:translateY(12px);filter:blur(8px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes loader-pulse{0%,100%{opacity:.4}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.loader-title span,.loader-state-title,.loader-state-desc,.loader-retry-btn,.loader-state-icon{animation:none}}

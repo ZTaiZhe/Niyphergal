@@ -1,0 +1,7 @@
+@import './loader.css';
+@import '@fontsource/jost/400.css';
+@import '@fontsource/jost/700.css';
+@import 'remixicon/fonts/remixicon.css';
+@import "tailwindcss";
+@import './base/tokens.css';
+@import './styles.css';

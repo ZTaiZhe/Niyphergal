@@ -1,0 +1,7 @@
+- [x] performHeroExit cleanup 末尾调用 initHomeAnimations()
+- [x] isHeroExitInFlight() 正确导出
+- [x] 动画分支中 home 的 initHomeAnimations 被 isHeroExitInFlight 抑制
+- [x] else 分支中 home 的 initHomeAnimations 被 isHeroExitInFlight 抑制
+- [x] 退出飞行完成后卡片执行 stagger 入场动效
+- [x] 正常首页进入时卡片仍正常执行入场动效
+- [x] 无 JS 运行时错误

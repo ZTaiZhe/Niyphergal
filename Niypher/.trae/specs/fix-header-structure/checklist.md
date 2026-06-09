@@ -1,0 +1,5 @@
+- [x] Header 为透明固定叠加层，非 Material AppBar
+- [x] Logo 为丙烯酸胶囊按钮（pill 形状 + 毛玻璃背景）
+- [x] 搜索栏居中，max-width 380px
+- [x] `flutter analyze lib` 无错误
+- [x] 部署后页面视觉与 React 版一致（已部署至 https://3133d937.niyphergal.pages.dev，需人工确认）

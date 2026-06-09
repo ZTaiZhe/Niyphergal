@@ -1,0 +1,3 @@
+- [x] 最终 else 分支 home 卡片初始化检查 isHeroExitInFlight
+- [x] 退出飞行时 3 个分支均正确：动画分支 skip、inner else 不触发、final else 用 revealHomeCardsImmediately
+- [x] 卡片立即显示，无延迟

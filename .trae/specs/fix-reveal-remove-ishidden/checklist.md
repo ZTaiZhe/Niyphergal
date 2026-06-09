@@ -1,0 +1,3 @@
+- [x] revealHomeCardsImmediately 移除 is-hidden 类
+- [x] 退出飞行时所有卡片立即显示，无 stagger-index 延迟
+- [x] 正常首页进入卡片动画不受影响

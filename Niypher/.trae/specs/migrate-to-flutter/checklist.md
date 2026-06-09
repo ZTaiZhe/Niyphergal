@@ -1,0 +1,43 @@
+- [x] Flutter 项目依赖完整，`flutter build web` 成功
+- [x] 本地数据源完整移植（42 条游戏 + 5 条轮播 + 评论 + 公告）
+- [x] 6 个页面路由配置正确，可导航切换
+- [x] NetworkImgLayer 照搬 Kazumi 实现（CachedNetworkImage + 内存优化 + 占位符 + heroFlightShuttleBuilder）
+- [x] GameCard 毛玻璃效果与 Web 版视觉一致，Hero tag 正确设置
+- [x] GameCard hover 效果：AnimatedScale(scale: 1.05, duration: 700ms, Curves.easeOut)
+- [x] Docker 导航栏照搬 Kazumi ScaffoldMenu（竖屏 NavigationBar + 横屏 NavigationRail）
+- [x] 搜索栏联想功能正常
+- [x] 公告弹窗显示和关闭正常
+- [x] 首页轮播图 Ken Burns + 内容交错入场动画与 GameCarousel.tsx 一致
+- [x] 首页 AIDA 结构：Attention（轮播图）→ Interest（卡片网格）→ Action（FAB）
+- [x] 首页游戏卡片网格照搬 Kazumi 响应式列数（SliverGrid）
+- [x] 首页滚动驱动动效：图片 scale 0.8→1.0 + opacity 滚动驱动（GSAP 等效）
+- [x] 首页卡片交错入场动画（flutter_animate + 交错延迟）
+- [x] 首页 ScrollToTop FAB（照搬 Kazumi）
+- [x] 详情页照搬 Kazumi InfoPage 结构（NestedScrollView + SliverAppBar.medium）
+- [x] 详情页 AIDA 结构：Attention（Hero 封面图）→ Interest（信息+评分）→ Desire（媒体+评论）→ Action（CTA）
+- [x] 详情页模糊背景头部照搬 Kazumi _InfoHeaderBackground
+- [x] 详情页 GSAP Scroll Pinning 等效（SliverAppBar pinned）
+- [x] Hero 共享元素过渡照搬 Kazumi（flightShuttleBuilder + transitionOnUserGestures）
+- [x] 详情页 Hero 逆过渡正常
+- [x] 详情页分层入场动画（GSAP Card Stacking 等效）
+- [x] 详情页媒体画廊横向滑动
+- [x] 详情页评分组件（参考 Kazumi flutter_rating_bar）
+- [x] 详情页信息网格显示正确
+- [x] 详情页资源下载区（登录/未登录状态）
+- [x] 详情页评论交流区
+- [x] 搜索页拼音首字母/全拼模糊匹配
+- [x] 搜索页排序/筛选功能
+- [x] 搜索页部分刷新
+- [x] 搜索页空状态/网络错误/骨架屏（照搬 Kazumi Skeletonizer）
+- [x] 分类页 6 个分类卡片显示和导航
+- [x] 个人页登录/注册流程
+- [x] 个人页已登录状态信息显示
+- [x] 亮/暗主题切换正常
+- [x] API 不可用时降级到本地数据
+- [x] 高端字体栈配置（Satoshi / Cabinet Grotesk / Outfit / Geist，禁止 Inter）
+- [x] 电影级区域间距（SizedBox(height: 128/192)）
+- [x] H1 标题不超过 2-3 行（maxLines: 2 + 大字号）
+- [x] 卡片网格无空缺角落
+- [x] 无便宜元标签（"SECTION 01"等）
+- [x] 按钮文字清晰可读
+- [x] Web 构建部署到 Cloudflare Pages 可访问

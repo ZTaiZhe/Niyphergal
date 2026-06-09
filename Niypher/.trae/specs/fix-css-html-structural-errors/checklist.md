@@ -1,0 +1,18 @@
+- [x] index.html CSS 入口引用 main.css 而非 styles.css
+- [x] Tailwind CSS 工具类（bg-gray-50, flex, h-screen, text-lg 等）正常生效
+- [x] tokens.css 所有变量在 styles.css 中可解析
+- [x] styles.css 中重复的 :root 变量定义已删除
+- [x] styles.css 中 --accent-color 全部替换为 --color-accent
+- [x] styles.css 中 --dark-accent-color 全部替换为 --color-accent
+- [x] tokens.css body.dark 包含 --color-accent 变量
+- [x] @keyframes rippleEffect 不再冲突（两个定义各自命名）
+- [x] #search-suggestions 选择器不重复
+- [x] .glass-card:hover 和 .acrylic-panel:hover transition 无属性名笔误
+- [x] @media 嵌套已转换为合法 CSS
+- [x] 项目可通过 vite build 构建
+- [x] acrylic-panel 和 glass-card 的毛玻璃效果正常
+- [x] 导航栏 nav-item.active 高亮颜色正常
+- [x] 排序按钮动画正常
+- [x] 主题切换（dark/light）颜色变量正确切换
+- [x] 响应式卡片网格在各断点正常
+- [x] index.html 标签正确闭合

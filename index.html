@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <script>
+(function(){var t=localStorage.getItem('niypher_theme');if(t==='dark'){document.documentElement.classList.add('dark');return}if(!t){var h=new Date().getHours();if(h<6||h>=18){document.documentElement.classList.add('dark')}}})();
+</script>
+    <title>NiypherGal</title>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <link rel="stylesheet" href="src/css/main.css">
+</head>
+<body class="bg-gray-50 h-screen flex flex-col relative">
+
+    <header class="fixed top-0 w-full z-[10000] px-5 py-3 flex items-center justify-center h-16 bg-transparent">
+        <div class="absolute left-5" id="logo-container">
+            <button id="header-logo-btn" data-action="logo-menu-toggle" class="acrylic-panel px-4 py-1.5 rounded-full btn-active cursor-pointer flex items-center gap-1 header-logo-btn">
+                <span class="header-logo-text"><h1 class="text-lg font-bold tracking-tight">NiypherGal</h1></span>
+                <i class="ri-arrow-left-line text-lg header-logo-back-icon"></i>
+                <i id="logo-menu-arrow" class="ri-arrow-down-s-line text-sm header-logo-arrow"></i>
+            </button>
+            <div id="logo-menu" class="absolute left-0 top-full mt-2 glass-card rounded-2xl overflow-hidden shadow-lg min-w-[140px]">
+                <button data-action="logo-menu-home" class="w-full px-4 py-3 text-left text-sm hover:bg-pink-500/10 transition-colors flex items-center gap-2">
+                    <i class="ri-home-4-line"></i>回到主页
+                </button>
+                <button data-action="logo-menu-random" class="w-full px-4 py-3 text-left text-sm hover:bg-pink-500/10 transition-colors flex items-center gap-2">
+                    <i class="ri-shuffle-line"></i>随机游戏
+                </button>
+                <button data-action="logo-menu-help" class="w-full px-4 py-3 text-left text-sm hover:bg-pink-500/10 transition-colors flex items-center gap-2">
+                    <i class="ri-book-open-line"></i>帮助文档
+                </button>
+                <button data-action="logo-menu-community" class="w-full px-4 py-3 text-left text-sm hover:bg-pink-500/10 transition-colors flex items-center gap-2">
+                    <i class="ri-group-line"></i>官方社群
+                </button>
+                <button data-action="logo-menu-feedback" class="w-full px-4 py-3 text-left text-sm hover:bg-pink-500/10 transition-colors flex items-center gap-2">
+                    <i class="ri-feedback-line"></i>帮助反馈
+                </button>
+            </div>
+        </div>
+        <div class="relative" id="desktop-search-container">
+            <div id="desktop-search-bar">
+                <div class="search-input-wrapper">
+                    <input type="search" id="header-search" enterkeyhint="search" placeholder="搜索游戏、分类或作者...">
+                </div>
+                <button id="header-search-btn"><i class="ri-search-2-line"></i></button>
+            </div>
+            <div id="search-suggestions" class="absolute left-0 right-0 mt-1 rounded-xl glass-card shadow-lg overflow-hidden hidden"></div>
+            <div id="search-pagination" class="absolute left-0 right-0 hidden flex justify-end px-2 py-1"></div>
+        </div>
+        <button id="mobile-search-btn" data-action="mobile-search-open" class="absolute right-5 w-10 h-10 rounded-full glass-card flex items-center justify-center btn-active cursor-pointer mobile-hidden">
+            <i class="ri-search-2-line text-lg"></i>
+        </button>
+    </header>
+    <div id="mobile-search-overlay" class="fixed inset-0 z-[10002]">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" data-action="mobile-search-close"></div>
+        <div class="absolute top-0 left-0 right-0 p-4 pt-3 transform -translate-y-full transition-transform duration-300" id="mobile-search-panel">
+            <div class="glass-card rounded-2xl p-4">
+                <div class="flex items-center gap-3 mb-3">
+                    <button data-action="mobile-search-close" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        <i class="ri-arrow-left-line text-lg"></i>
+                    </button>
+                    <div class="flex-1 flex items-center rounded-full px-4 py-2 glass-card">
+                        <i class="ri-search-2-line text-gray-500 dark:text-gray-400 mr-2"></i>
+                        <input type="search" id="mobile-search-input" enterkeyhint="search" placeholder="搜索游戏、分类或作者..." class="flex-1 bg-transparent outline-none text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 caret-pink-500 dark:caret-pink-400">
+                    </div>
+                </div>
+                <div id="mobile-search-suggestions" class="max-h-[60vh] overflow-y-auto hide-scrollbar"></div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Loading Screen -->
+    <div id="app-loader" class="app-loader">
+        <div class="loader-blur"></div>
+        <div class="loader-content" id="loader-normal">
+            <h1 class="loader-title"><span style="--i:0">N</span><span style="--i:1">i</span><span style="--i:2">y</span><span style="--i:3">p</span><span style="--i:4">h</span><span style="--i:5">e</span><span style="--i:6">r</span><span style="--i:7">G</span><span style="--i:8">a</span><span style="--i:9">l</span></h1>
+            <div class="loader-progress"><div class="loader-progress-fill" id="loader-progress-fill"></div></div>
+        </div>
+        <div class="loader-content hidden" id="loader-timeout">
+            <div class="loader-icon-wrapper">
+                <i class="ri-time-line loader-state-icon"></i>
+            </div>
+            <p class="loader-state-title">加载超时</p>
+            <p class="loader-state-desc">请检查网络连接后重试</p>
+            <button class="loader-retry-btn" id="loader-retry-btn">
+                <i class="ri-refresh-line"></i> 重新加载
+            </button>
+        </div>
+        <div class="loader-content hidden" id="loader-error">
+            <div class="loader-icon-wrapper">
+                <i class="ri-error-warning-line loader-state-icon"></i>
+            </div>
+            <p class="loader-state-title">加载失败</p>
+            <p class="loader-state-desc">请刷新页面或稍后再试</p>
+            <button class="loader-retry-btn">
+                <i class="ri-refresh-line"></i> 刷新页面
+            </button>
+        </div>
+    </div>
+<main class="flex-1 overflow-y-auto hide-scrollbar pt-4 pb-24 px-4" id="main-container">
+        <section data-page="home" id="page-home"></section>
+        <section data-page="category" id="page-category" style="display:none"></section>
+        <section data-page="galgame" id="page-galgame" style="display:none"></section>
+        <section data-page="search" id="page-search" style="display:none"></section>
+        <section data-page="profile" id="page-profile" style="display:none"></section>
+        <section data-page="detail" id="page-detail" style="display:none"></section>
+    </main>
+
+    <nav class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-[10001] acrylic-panel rounded-full flex justify-around items-center h-16 px-6 py-2 max-w-md w-full">
+        <button id="home-nav-btn" class="nav-item group w-full flex flex-col items-center justify-center text-black/40 hover:text-black transition-colors relative" data-target="home">
+            <span class="nav-icon-wrapper">
+                <i class="ri-home-4-line text-2xl mb-1 nav-icon-line transition-transform"></i>
+                <i class="ri-home-4-fill text-2xl mb-1 nav-icon-fill" style="display:none"></i>
+            </span>
+            <span class="text-[10px] font-medium">推荐</span>
+            <span class="nav-item-indicator"></span>
+        </button>
+        <button data-action="nav-category" class="nav-item group w-full flex flex-col items-center justify-center text-black/40 hover:text-black transition-colors relative" data-target="category">
+            <span class="nav-icon-wrapper">
+                <i class="ri-apps-line text-2xl mb-1 nav-icon-line transition-transform"></i>
+                <i class="ri-apps-fill text-2xl mb-1 nav-icon-fill" style="display:none"></i>
+            </span>
+            <span class="text-[10px] font-medium">分类</span>
+            <span class="nav-item-indicator"></span>
+        </button>
+        <button data-action="nav-galgame" class="nav-item group w-full flex flex-col items-center justify-center text-black/40 hover:text-black transition-colors relative" data-target="galgame">
+            <span class="nav-icon-wrapper">
+                <i class="ri-compass-3-line text-2xl mb-1 nav-icon-line transition-transform"></i>
+                <i class="ri-compass-3-fill text-2xl mb-1 nav-icon-fill" style="display:none"></i>
+            </span>
+            <span class="text-[10px] font-medium">魅力搜索</span>
+            <span class="nav-item-indicator"></span>
+        </button>
+        <button data-action="nav-profile" class="nav-item group w-full flex flex-col items-center justify-center text-black/40 hover:text-black transition-colors relative" data-target="profile">
+            <span class="nav-icon-wrapper">
+                <i class="ri-user-smile-line text-2xl mb-1 nav-icon-line transition-transform"></i>
+                <i class="ri-user-smile-fill text-2xl mb-1 nav-icon-fill" style="display:none"></i>
+            </span>
+            <span class="text-[10px] font-medium">我的</span>
+            <span class="nav-item-indicator"></span>
+        </button>
+    </nav>
+
+    <button data-action="toggle-theme" id="theme-toggle" class="fixed bottom-20 left-4 w-12 h-12 rounded-full acrylic-panel flex items-center justify-center btn-active cursor-pointer z-50">
+        <i id="theme-icon" class="ri-sun-line text-xl"></i>
+    </button>
+
+    <button id="scroll-to-top-btn" aria-label="回到顶部" class="fixed w-12 h-12 rounded-full acrylic-panel flex items-center justify-center btn-active cursor-pointer z-50" style="bottom: 5rem; right: 1rem;">
+        <i class="ri-arrow-up-line text-xl"></i>
+    </button>
+
+    <button id="search-refresh-btn" aria-label="刷新搜索" class="fixed w-12 h-12 rounded-full acrylic-panel flex items-center justify-center btn-active cursor-pointer z-50 hidden" style="bottom: max(env(safe-area-inset-bottom, 20px), 5rem); right: 1rem;">
+        <i class="ri-refresh-line text-xl"></i>
+    </button>
+
+    <script type="module" src="src/js/app.js" charset="utf-8"></script>
+</body>
+</html>

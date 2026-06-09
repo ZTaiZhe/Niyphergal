@@ -1,0 +1,9 @@
+- [x] CSP 允许 CanvasKit Worker 加载（worker-src 'self' blob:）
+- [x] CSP 允许 Google Fonts API 请求（connect-src 包含 fonts.googleapis.com）
+- [x] CSP 允许 manifest.json 加载（manifest-src 'self'）
+- [x] 页面打开后 1 秒内显示本地数据（骨架屏→游戏卡片）
+- [x] API 超时 3 秒内降级到本地数据
+- [x] Flutter 引擎加载期间显示品牌色加载动画
+- [x] 骨架屏在暗色主题下清晰可见
+- [x] 构建无 cupertino_icons 字体警告
+- [x] 部署后页面可正常访问和交互

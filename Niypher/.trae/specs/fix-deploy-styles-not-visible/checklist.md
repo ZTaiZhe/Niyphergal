@@ -1,0 +1,5 @@
+- [x] 部署后刷新页面能看到最新版本（不被 Service Worker 缓存阻止）
+- [x] 首页轮播和游戏网格之间显示 pill 形状毛玻璃搜索框
+- [x] 中国大陆用户文本使用 Outfit 字体渲染（不依赖 Google Fonts CDN）
+- [x] `flutter analyze lib` 无错误
+- [x] 部署后页面视觉与 React 版基本一致（已部署至 https://f9a34e86.niyphergal.pages.dev，需人工确认视觉）

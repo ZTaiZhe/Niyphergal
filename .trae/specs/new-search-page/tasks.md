@@ -1,0 +1,271 @@
+# 新搜索页 - The Implementation Plan (Decomposed and Prioritized Task List)
+
+## [x] Task 0: 工具函数准备
+- **Priority**: P0
+- **Depends On**: None
+- **Description**: 
+  - 创建 src/js/utils/searchHelper.js 工具函数文件
+  - 实现 processResults(results, sortKey, filterType) 纯函数，处理排序和筛选逻辑
+  - 使用 URLSearchParams 原生 API 替代手动解析：
+    - parseSearchParams = () => new URLSearchParams(window.location.search)
+    - serializeSearchParams = (params) => new URLSearchParams(params).toString()
+  - 增加 debounce 函数工具
+  - 确保所有函数都是纯函数，无副作用
+- **Acceptance Criteria Addressed**: [AC-4, AC-5, AC-10, AC-13]
+- **Test Requirements**:
+  - `programmatic` TR-0.1: searchHelper.js 文件创建成功
+  - `programmatic` TR-0.2: processResults 函数能正确处理排序
+  - `programmatic` TR-0.3: processResults 函数能正确处理筛选
+  - `programmatic` TR-0.4: parseSearchParams 使用 URLSearchParams 原生 API
+  - `programmatic` TR-0.5: serializeSearchParams 使用 URLSearchParams 原生 API
+  - `programmatic` TR-0.6: debounce 函数正确实现
+- **Notes**: 优先使用 URLSearchParams 原生 API，自动处理编码/解码边缘情况；增加 debounce 工具函数供 Task 2 和 3 使用；Task 1, 5, 6 都会用到这些逻辑，提前抽离避免代码重复
+
+## [x] Task 1: 创建搜索页渲染模块
+- **Priority**: P0
+- **Depends On**: Task 0
+- **Description**: 
+  - 创建 src/js/pages/search.js 文件，实现搜索页的基础渲染功能
+  - 严格遵循 URL 驱动：renderSearch 函数只接受 params.q 作为输入，不直接读取 Header 搜索栏
+  - 搜索页不包含单独的搜索栏，仅显示搜索结果
+  - 利用 SearchIndex.query(params) 或现有 SearchIndex 提供标准化的结果数组
+  - 使用 searchHelper.processResults 处理排序和筛选
+  - 实现前置清理机制：container.innerHTML = '' 清理旧内容，销毁旧的事件监听器
+  - 实现 AbortController 防止异步竞态条件（用户搜 A 马上搜 B 时取消 A 的处理）
+  - 实现骨架屏：在渲染结果前，如果数据量大可能有延迟，先渲染骨架屏占位
+  - 实现空状态处理（搜索词为空时显示提示或推荐内容）
+  - 实现网络异常处理和重试机制
+  - 实现输入框焦点管理（从Header跳转时失焦，进入空搜索页时聚焦）
+  - 同步文档标题：document.title = `${keyword} - 搜索`
+  - 实现 ARIA 无障碍支持：结果容器设置 aria-live="polite"，内容更新时屏幕阅读器会播报
+  - 确保骨架屏拥有 aria-hidden="true"，避免读屏软件读出无意义的占位符
+  - 页面加载时，根据 URL 参数正确高亮/激活对应的排序和筛选按钮（UI回显）
+- **Acceptance Criteria Addressed**: [AC-1, AC-3, AC-8, AC-9, AC-10, AC-12, AC-13]
+- **Test Requirements**:
+  - `programmatic` TR-1.1: search.js 文件创建成功，导出 renderSearch 函数
+  - `programmatic` TR-1.2: renderSearch 只接受 params 作为输入，单一数据源原则
+  - `programmatic` TR-1.3: renderSearch 使用 SearchIndex.query(params) 获取标准化结果
+  - `programmatic` TR-1.4: renderSearch 使用 searchHelper.processResults 处理排序筛选
+  - `programmatic` TR-1.5: renderSearch 实现前置清理机制
+  - `programmatic` TR-1.6: document.title 正确同步为 "关键词 - 搜索"
+  - `programmatic` TR-1.7: 结果容器设置 aria-live="polite"
+  - `programmatic` TR-1.8: 骨架屏设置 aria-hidden="true"
+  - `programmatic` TR-1.9: 渲染完成后，根据 URL 参数正确高亮/激活对应的排序和筛选按钮（UI回显）
+  - `human-judgement` TR-1.10: 数据加载前显示骨架屏
+  - `human-judgement` TR-1.11: 搜索词为空时显示空状态而非空白或报错
+  - `human-judgement` TR-1.12: 网络异常时显示异常提示和重试按钮
+  - `human-judgement` TR-1.13: 从Header跳转时输入框失去焦点，进入空搜索页时输入框获取焦点
+  - `human-judgement` TR-1.14: 搜索页UI风格与现有页面保持一致
+- **Notes**: 严格遵循 URL 驱动视图模式，不要让搜索页去"拉取"Header的值；记得更新 document.title；实现 abort 机制防止异步竞态；实现前置清理机制防止 DOM 堆积；实现 ARIA 无障碍支持
+
+## [x] Task 2: 更新路由和渲染器
+- **Priority**: P0
+- **Depends On**: Task 1
+- **Description**: 
+  - 在 router.js 中添加 URL 参数支持（使用 encodeURIComponent 编码）
+  - 在 router.js 中实现 push 和 replace 两种路由模式
+  - 新关键词搜索 -> 使用 history.pushState（新增历史记录）
+  - 页内刷新/排序/筛选 -> 使用 history.replaceState（避免用户点后退时需退几十次筛选记录）
+  - 在 renderer.js 中添加搜索页的渲染逻辑
+  - 实现 PageOrder 兜底逻辑：标准场景 vs 兜底场景
+  - 实现动画防抖：使用 searchHelper.debounce，短时间内连续 URL 变化不触发多次重绘或动画
+  - 实现搜索页内原地刷新功能（已在搜索页时禁用平移动画）
+  - 实现滚动位置管理：
+    - push（新搜索）：强制滚动到顶部 window.scrollTo(0, 0)
+    - replace（筛选/排序）：保持当前滚动位置
+    - popstate（后退）：尝试恢复之前的滚动位置（手动记录 scrollY 到 history.state）
+- **Acceptance Criteria Addressed**: [AC-1, AC-6, AC-10, AC-11]
+- **Test Requirements**:
+  - `programmatic` TR-2.1: router.js 正确实现 push 和 replace 方法
+  - `programmatic` TR-2.2: renderer.js 中正确导入并调用 renderSearch
+  - `programmatic` TR-2.3: PageOrder 兜底逻辑正确实现（伪代码: to.index/from.index 缺失时用 'fade'）
+  - `programmatic` TR-2.4: 动画防抖正常工作，短时间内多次 URL 变化不闪烁
+  - `programmatic` TR-2.5: 已在搜索页时再次搜索不触发平移动画
+  - `programmatic` TR-2.6: push 时滚动到顶部，replace 时保持滚动位置
+  - `human-judgement` TR-2.7: 页面切换动画流畅，方向正确
+  - `human-judgement` TR-2.8: 点击进入详情页再返回，滚动位置能正确恢复（Scroll Restoration）
+- **Notes**: 搜索页的 pageOrder 值需要根据 docker 栏顺序确定，或使用动态计算；实现方向判断的伪代码已提供；使用 debounce 防止动画防抖；实现 Scroll Restoration 滚动位置管理
+
+## [x] Task 3: 修改搜索逻辑 - 跳转到搜索页
+- **Priority**: P0
+- **Depends On**: Task 2
+- **Description**: 
+  - 修改 search.js 中的 SearchSuggestion.performSearch 方法
+  - 修改 SearchSuggestion.handleKeydown 中 Enter 键的处理，明确事件拦截顺序
+  - 事件拦截优先级：if (hasHighlightedItem) { selectItem(); return; } else { triggerSearchRoute(); }
+  - 点击搜索按钮或在搜索栏按回车（未选中联想项）后跳转到搜索页而不是直接执行搜索
+  - 保持选中联想项时按回车的原有行为（将联想项文本输入搜索栏并执行搜索）
+  - 确保联想菜单高亮时按 Enter 不路由跳转
+  - 添加搜索按钮的点击事件监听器
+  - 强制编码：跳转前必须执行 encodeURIComponent(keyword)
+  - 输入框失焦：跳转触发后，立即调用 input.blur() 收起移动端键盘
+  - 区分搜索页内的操作：修改关键词使用 router.push，修改筛选/排序使用 router.replace
+  - Header 组件监听路由变化来同步输入框的值
+  - ⚠️ 状态同步死锁预防：只有当输入框没有焦点 (document.activeElement !== input) 时，才将 URL 的 q 参数同步回输入框
+  - 确保 Header 搜索框 <input> 拥有 type="search" 和 enterkeyhint="search"
+- **Acceptance Criteria Addressed**: [AC-2, AC-3, AC-3.1, AC-3.2, AC-10, AC-11, AC-13]
+- **Test Requirements**:
+  - `programmatic` TR-3.1: performSearch 方法（未选中联想项时）调用 router.push('search')
+  - `programmatic` TR-3.2: Enter 键处理优先级正确（先处理高亮项，再处理搜索跳转）
+  - `programmatic` TR-3.3: Enter 键（未选中联想项）触发跳转而非直接搜索
+  - `programmatic` TR-3.4: Enter 键（选中联想项）保持原有行为：将联想项文本输入搜索栏并执行搜索
+  - `programmatic` TR-3.5: 联想菜单高亮时按 Enter 不路由跳转
+  - `programmatic` TR-3.6: header 搜索按钮点击触发搜索页跳转
+  - `programmatic` TR-3.7: 搜索时 URL 参数被正确使用 encodeURIComponent 编码
+  - `programmatic` TR-3.8: 跳转触发后立即调用 input.blur() 收起键盘
+  - `programmatic` TR-3.9: 搜索页内修改关键词使用 router.push，修改筛选/排序使用 router.replace
+  - `programmatic` TR-3.10: Header 组件监听路由变化来同步输入框的值
+  - `programmatic` TR-3.11: 同步 URL 到 Input 时检查 document.activeElement，防止覆盖用户正在输入的文字
+  - `programmatic` TR-3.12: Header 搜索框拥有 type="search" 和 enterkeyhint="search"
+  - `human-judgement` TR-3.13: 搜索栏输入后点击搜索或回车（未选中项）正确跳转
+- **Notes**: 严重警告：同步 URL 到 Input 时，必须检查 document.activeElement，防止覆盖用户正在输入的文字；这是 Bug 高发区，严格执行事件拦截顺序；确保 Header 搜索框 type="search" 和 enterkeyhint="search"；保持其他键盘功能（上下左右选择、翻页）不变
+
+## [x] Task 4: 确保联想栏功能完整性
+- **Priority**: P0
+- **Depends On**: Task 3
+- **Description**: 
+  - 验证联想栏的布局不变
+  - 验证联想栏的动画不变
+  - 验证联想栏的功能不变（除了 Enter 键）
+  - 移动端适配检查：检查在移动端视图下，联想栏弹出时是否会把 Header 顶上去，或者与搜索页内容层叠出现错乱（Z-Index 问题）
+  - 点击穿透验证：验证点击联想栏背景时，是否会错误地触发下方搜索结果页的卡片点击事件
+  - 由逻辑智能体和功能保护智能体验证
+- **Acceptance Criteria Addressed**: [AC-7]
+- **Test Requirements**:
+  - `programmatic` TR-4.1: 联想栏的 HTML 结构未改变
+  - `programmatic` TR-4.2: 联想栏的 CSS 类名和动画类保持一致
+  - `human-judgement` TR-4.3: 联想栏的功能（输入联想、分页、选择）正常工作
+  - `human-judgement` TR-4.4: 联想栏的显示/隐藏动画正常
+  - `human-judgement` TR-4.5: 移动端视图下联想栏不会把 Header 顶上去
+  - `human-judgement` TR-4.6: 移动端视图下联想栏 Z-Index 正确，不会与搜索页内容层叠错乱
+  - `human-judgement` TR-4.7: 点击联想栏背景不会触发下方搜索结果页的卡片点击事件
+- **Notes**: 这是一个验证任务，确保没有破坏现有功能；重点关注移动端适配和点击穿透问题
+
+## [x] Task 5: 添加排序功能到搜索页
+- **Priority**: P1
+- **Depends On**: Task 1
+- **Description**: 
+  - 在搜索页添加排序 UI 组件（布局由 ui 智能体重新设计）
+  - 使用 searchHelper.processResults 处理排序逻辑（纯函数，逻辑与 UI 分离）
+  - 排序功能仅在搜索页生效
+  - 排序状态同步到 URL 参数（使用 encodeURIComponent 编码）
+  - 排序的点击事件不应直接修改 DOM，而是调用 router.replace({ query: { ...current, sort: 'date' } })
+  - 让 renderSearch 监听到 URL 变化自动重绘（单向数据流：Click -> URL -> Render）
+  - 搜索页内修改排序条件使用路由器更换
+  - 当搜索结果为 0 时，禁用或隐藏排序按钮
+  - 实现 Toggle/Reset 逻辑：再次点击已选中的排序项，从 URL 中移除该参数（恢复默认排序状态）
+  - 页面加载时，根据 URL 参数高亮对应的排序按钮（UI 回显）
+- **Acceptance Criteria Addressed**: [AC-4, AC-10, AC-11]
+- **Test Requirements**:
+  - `programmatic` TR-5.1: 搜索结果能根据选择的排序方式重新排序
+  - `programmatic` TR-5.2: 排序逻辑使用 searchHelper.processResults 纯函数
+  - `programmatic` TR-5.3: 排序状态能保存到 URL 参数（正确编码）
+  - `programmatic` TR-5.4: 排序点击调用 router.replace，单向数据流正确
+  - `programmatic` TR-5.5: 搜索页内修改排序使用路由器更换
+  - `programmatic` TR-5.6: 当 results.length === 0 时，排序控件自动禁用或隐藏
+  - `programmatic` TR-5.7: 再次点击已选中的排序项，从 URL 中移除该参数（恢复默认）
+  - `programmatic` TR-5.8: 页面加载时，根据 URL 参数高亮对应的排序按钮（UI 回显）
+  - `human-judgement` TR-5.9: 排序 UI 布局符合设计规范（由 ui 智能体验证）
+  - `human-judgement` TR-5.10: 排序交互流畅，有适当的反馈
+- **Notes**: 排序 UI 和动效分别由专门的智能体设计；严格遵循逻辑与 UI 分离原则；当 results.length === 0 时，自动禁用排序控件；实现 Toggle/Reset 逻辑，再次点击已选中项恢复默认；显式验证 active 类的添加逻辑
+
+## [x] Task 6: 添加筛选功能到搜索页
+- **Priority**: P1
+- **Depends On**: Task 1
+- **Description**: 
+  - 在搜索页添加筛选 UI 组件（布局由 ui 智能体重新设计）
+  - 使用 searchHelper.processResults 处理筛选逻辑（纯函数，逻辑与 UI 分离）
+  - 筛选功能仅在搜索页生效
+  - 筛选状态同步到 URL 参数（使用 encodeURIComponent 编码）
+  - 筛选的点击事件不应直接修改 DOM，而是调用 router.replace({ query: { ...current, filter: 'type' } })
+  - 让 renderSearch 监听到 URL 变化自动重绘（单向数据流：Click -> URL -> Render）
+  - 搜索页内修改筛选条件使用路由器更换
+  - 当搜索结果为 0 时，禁用或隐藏筛选按钮
+  - 实现 Toggle/Reset 逻辑：再次点击已激活的筛选按钮，从 URL 参数中移除对应的 key（恢复默认状态）
+  - 页面加载时，根据 URL 参数高亮对应的筛选按钮（UI 回显）
+- **Acceptance Criteria Addressed**: [AC-5, AC-10, AC-11]
+- **Test Requirements**:
+  - `programmatic` TR-6.1: 搜索结果能根据筛选条件正确过滤
+  - `programmatic` TR-6.2: 筛选逻辑使用 searchHelper.processResults 纯函数
+  - `programmatic` TR-6.3: 筛选状态能保存到 URL 参数（正确编码）
+  - `programmatic` TR-6.4: 筛选点击调用 router.replace，单向数据流正确
+  - `programmatic` TR-6.5: 搜索页内修改筛选使用路由器更换
+  - `programmatic` TR-6.6: 当 results.length === 0 时，筛选控件自动禁用或隐藏
+  - `programmatic` TR-6.7: 再次点击已激活的筛选按钮，从 URL 参数中移除对应的 key（恢复默认）
+  - `programmatic` TR-6.8: 页面加载时，根据 URL 参数高亮对应的筛选按钮（UI 回显）
+  - `human-judgement` TR-6.9: 筛选 UI 布局符合设计规范（由 ui 智能体验证）
+  - `human-judgement` TR-6.10: 筛选交互流畅，有适当的反馈
+- **Notes**: 筛选 UI 和动效分别由专门的智能体设计；严格遵循逻辑与 UI 分离原则；当 results.length === 0 时，自动禁用筛选控件；实现 Toggle/Reset 逻辑，再次点击已激活项恢复默认；显式验证 active 类的添加逻辑
+
+## [x] Task 7: 搜索页动画和动效设计
+- **Priority**: P1
+- **Depends On**: Task 5, Task 6
+- **Description**: 
+  - 由 ux 智能体设计搜索页的动效
+  - 排序和筛选组件的交互动效
+  - 搜索结果展示的动效
+  - 原地刷新优化：使用 CSS opacity 渐变（Fade Out -> Update Data -> Fade In）替代生硬替换
+  - 列表动效：使用 FLIP 动画或类似技术实现平滑过渡
+  - 加载骨架屏的动效
+- **Acceptance Criteria Addressed**: [AC-4, AC-5, AC-6, AC-11, AC-12]
+- **Test Requirements**:
+  - `human-judgement` TR-7.1: 排序和筛选动效流畅自然
+  - `human-judgement` TR-7.2: 搜索结果展示有适当的入场动画
+  - `human-judgement` TR-7.3: 原地刷新使用 opacity 渐变，体验流畅
+  - `human-judgement` TR-7.4: 列表动效使用 FLIP 或类似技术，平滑过渡
+  - `human-judgement` TR-7.5: 加载骨架屏动效流畅
+  - `human-judgement` TR-7.6: 整体动效符合品牌风格
+- **Notes**: 此任务由 ux 智能体专门负责；重点关注性能和原地刷新体验
+
+## [x] Task 8: 端到端测试和集成验证
+- **Priority**: P2
+- **Depends On**: Task 4, Task 5, Task 6, Task 7
+- **Description**: 
+  - 完整测试搜索流程
+  - 验证模块独立性
+  - 验证 URL 参数持久化（刷新后不丢失）
+  - 验证搜索页内原地刷新
+  - 验证空状态处理
+  - 验证特殊字符搜索支持（测试 C#, 100%, App&Game 等）
+  - 验证长搜索词（Header 是否溢出，Result Page 的 Title 是否截断）
+  - 验证浏览器后退（搜索 A -> 搜索 B -> 后退 -> 回到 A 且搜索栏恢复）
+  - 验证状态同步死锁预防（用户输入时 URL 变化不会覆盖正在输入的内容）
+  - 验证无结果时排序/筛选禁用
+  - 验证网络异常处理
+  - 验证动画场景（标准和兜底）
+  - 验证滚动位置恢复（进入详情页再返回）
+  - 验证无障碍访问性（ARIA 属性）
+  - 验证排序/筛选 Toggle/Reset 逻辑
+  - 验证排序/筛选 UI 回显
+  - 回归测试现有功能
+- **Acceptance Criteria Addressed**: [AC-1, AC-2, AC-3, AC-3.1, AC-3.2, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11, AC-12, AC-13]
+- **Test Requirements**:
+  - `programmatic` TR-8.1: 完整搜索流程（输入 -> 搜索 -> 跳转 -> 结果）正常
+  - `programmatic` TR-8.2: 刷新页面后搜索结果仍保持
+  - `programmatic` TR-8.3: 搜索页内原地刷新不触发平移动画
+  - `programmatic` TR-8.4: 特殊字符搜索 URL 正确编码并正确解码显示结果（C#, 100%, App&Game）
+  - `programmatic` TR-8.5: 长搜索词测试：Header 不溢出，Result Page Title 正确截断
+  - `programmatic` TR-8.6: 浏览器后退测试：搜索 A -> 搜索 B -> 后退 -> 回到 A 且搜索栏文字恢复为 A
+  - `programmatic` TR-8.7: 状态同步死锁预防测试：用户正在输入时 URL 变化不会覆盖输入内容
+  - `programmatic` TR-8.8: 无结果时排序/筛选自动禁用
+  - `programmatic` TR-8.9: 排序/筛选 Toggle/Reset 逻辑正常
+  - `programmatic` TR-8.10: 排序/筛选 UI 回显正常
+  - `programmatic` TR-8.11: 搜索页操作不影响 header 搜索栏功能
+  - `human-judgement` TR-8.12: 所有现有功能（联想、导航、其他页面）正常
+  - `human-judgement` TR-8.13: 空状态显示正常
+  - `human-judgement` TR-8.14: 网络异常处理正常
+  - `human-judgement` TR-8.15: 标准和兜底动画场景正常
+  - `human-judgement` TR-8.16: 滚动位置恢复正常（进入详情页再返回）
+  - `human-judgement` TR-8.17: ARIA 无障碍属性正确
+  - `human-judgement` TR-8.18: 整体用户体验流畅
+- **Notes**: 这是最终集成测试；重点测试边界情况（特殊字符、长搜索词、浏览器后退、状态同步死锁预防、滚动位置恢复、无障碍访问性、排序/筛选 Toggle/Reset 与 UI 回显）
+
+# Task Dependencies
+- [Task 1] depends on [Task 0]
+- [Task 2] depends on [Task 1]
+- [Task 3] depends on [Task 2]
+- [Task 4] depends on [Task 3]
+- [Task 5] depends on [Task 1]
+- [Task 6] depends on [Task 1]
+- [Task 7] depends on [Task 5, Task 6]
+- [Task 8] depends on [Task 4, Task 5, Task 6, Task 7]

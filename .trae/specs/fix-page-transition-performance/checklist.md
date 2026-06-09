@@ -1,0 +1,6 @@
+- [x] render() 函数不再使用 debounce，页面切换立即响应
+- [x] 页面切换时始终显示过渡动画（新页面有动画类即执行过渡分支）
+- [x] oldAnimationClass 为空时旧页面使用 animate-fade-out 退出
+- [x] 动画期间旧内容不双重存在（原始 section 在构建过渡容器前被移除）
+- [x] pageOrder 包含 detail: 5，从 detail 返回时动画方向正确
+- [x] 快速连续点击导航不会导致卡顿或不响应

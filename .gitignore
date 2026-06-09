@@ -1,0 +1,10 @@
+﻿node_modules/
+dist/
+.wrangler/
+.vite/
+*.log
+.env
+.env.*
+.DS_Store
+Thumbs.db
+github-recovery-codes.txt

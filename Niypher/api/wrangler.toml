@@ -1,0 +1,9 @@
+name = "niyphergal-api"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "niyphergal-db"
+database_id = "faabe4ef-be20-41f7-9cd5-416a14359d8e"
