@@ -135,17 +135,18 @@ jobs:
           COMMIT_TITLE=$(echo "$COMMIT_MSG" | head -1)
           TIMESTAMP=$(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M CST')
 
-          ENTRY="## ${VERSION}
-- **时间**: ${TIMESTAMP}
-- **Commit**: ${SHORT_SHA} - ${COMMIT_TITLE}
-- **构建产物**: ${ARTIFACT_SIZE}
-- **变更**: ${COMMIT_TITLE}
-"
+          # Build changelog entry
+          {
+            echo "## ${VERSION}"
+            echo "- **时间**: ${TIMESTAMP}"
+            echo "- **Commit**: ${SHORT_SHA} - ${COMMIT_TITLE}"
+            echo "- **构建产物**: ${ARTIFACT_SIZE}"
+            echo "- **变更**: ${COMMIT_TITLE}"
+            echo ""
+          } > /tmp/new_entry.txt
 
           # Prepend new entry (after the title line)
           if [ -f CHANGELOG.md ]; then
-            # Insert after the first line (title)
-            echo "$ENTRY" > /tmp/new_entry.txt
             {
               head -1 CHANGELOG.md
               echo ""
@@ -156,7 +157,7 @@ jobs:
           else
             echo "# Niyphergal 更新日志" > CHANGELOG.md
             echo "" >> CHANGELOG.md
-            echo "$ENTRY" >> CHANGELOG.md
+            cat /tmp/new_entry.txt >> CHANGELOG.md
           fi
 
       - name: Commit VERSION and CHANGELOG.md
@@ -164,7 +165,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add VERSION CHANGELOG.md
-          git diff --cached --quiet || git commit -m "chore: bump version to $(cat VERSION)"
+          git diff --cached --quiet || git commit -m "chore: bump version to $(cat VERSION) [skip ci]"
           git push
 
   deploy:
