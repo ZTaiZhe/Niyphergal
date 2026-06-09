@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260609_2)
+- **时间**: 2026-06-09 23:19 CST
+- **Commit**: b43c076 - fix: resolve YAML indentation error in ci.yml and prevent CI infinite loop
+- **构建产物**: 5.1M
+- **变更**: fix: resolve YAML indentation error in ci.yml and prevent CI infinite loop
+
+
 ## Alpha 0.0.1 (build_260609_6)
 - **时间**: 2026-06-09 22:23 CST
 - **Commit**: 49b2319 - feat: setup CI/CD pipeline with GitHub Actions + Cloudflare Pages
