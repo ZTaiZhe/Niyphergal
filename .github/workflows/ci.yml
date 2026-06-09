@@ -6,26 +6,170 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.new_version }}
+      artifact_size: ${{ steps.verify.outputs.artifact_size }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
+
       - run: npm install
       - run: npm run build
+
+      - name: Verify build output
+        id: verify
+        run: |
+          if [ ! -f dist/index.html ]; then
+            echo "::error::dist/index.html not found - build failed"
+            exit 1
+          fi
+          ARTIFACT_SIZE=$(du -sh dist/ | cut -f1)
+          echo "artifact_size=$ARTIFACT_SIZE" >> $GITHUB_OUTPUT
+          echo "Artifact size: $ARTIFACT_SIZE"
+
+      - name: Compute next version
+        id: version
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          TODAY=$(date +%y%m%d)
+
+          if [ -f VERSION ]; then
+            CURRENT=$(cat VERSION | tr -d '[:space:]')
+            echo "Current version: $CURRENT"
+            # Parse: Alpha X.Y.Z (build_yymmdd_N)
+            if [[ "$CURRENT" =~ ^Alpha([0-9]+)\.([0-9]+)\.([0-9]+)\(build_([0-9]+)_([0-9]+)\)$ ]]; then
+              MAJOR=${BASH_REMATCH[1]}
+              X=${BASH_REMATCH[2]}
+              Y=${BASH_REMATCH[3]}
+              BUILD_DATE=${BASH_REMATCH[4]}
+              BUILD_N=${BASH_REMATCH[5]}
+            else
+              echo "Invalid VERSION format, resetting to Alpha 0.0.1"
+              MAJOR=0; X=0; Y=1; BUILD_DATE=$TODAY; BUILD_N=0
+            fi
+          else
+            echo "No VERSION file, starting fresh"
+            MAJOR=0; X=0; Y=1; BUILD_DATE=$TODAY; BUILD_N=0
+          fi
+
+          # Check if this is a feature release (commit message contains feat!:)
+          IS_FEATURE=0
+          if echo "$COMMIT_MSG" | grep -qE '^feat!:'; then
+            IS_FEATURE=1
+          fi
+
+          if [ "$IS_FEATURE" -eq 1 ]; then
+            # Increment 0.x.y, carry over on 10
+            Y=$((Y + 1))
+            if [ "$Y" -ge 10 ]; then
+              Y=0
+              X=$((X + 1))
+              if [ "$X" -ge 10 ]; then
+                X=0
+                MAJOR=$((MAJOR + 1))
+              fi
+            fi
+            # Reset build number for new date
+            NEW_BUILD_N=1
+          else
+            # Bug fix: only increment build number
+            if [ "$BUILD_DATE" = "$TODAY" ]; then
+              NEW_BUILD_N=$((BUILD_N + 1))
+            else
+              NEW_BUILD_N=1
+            fi
+          fi
+
+          NEW_VERSION="Alpha ${MAJOR}.${X}.${Y} (build_${TODAY}_${NEW_BUILD_N})"
+          echo "New version: $NEW_VERSION"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+          # Write new version to file
+          echo "$NEW_VERSION" > VERSION
+
       - uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist/
           retention-days: 1
 
-  deploy:
+      - uses: actions/upload-artifact@v4
+        with:
+          name: version
+          path: VERSION
+
+  changelog:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: version
+
+      - name: Update CHANGELOG.md
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+          ARTIFACT_SIZE: ${{ needs.build.outputs.artifact_size }}
+          COMMIT_SHA: ${{ github.sha }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          SHORT_SHA=$(echo "$COMMIT_SHA" | cut -c1-7)
+          COMMIT_TITLE=$(echo "$COMMIT_MSG" | head -1)
+          TIMESTAMP=$(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M CST')
+
+          ENTRY="## ${VERSION}
+- **时间**: ${TIMESTAMP}
+- **Commit**: ${SHORT_SHA} - ${COMMIT_TITLE}
+- **构建产物**: ${ARTIFACT_SIZE}
+- **变更**: ${COMMIT_TITLE}
+"
+
+          # Prepend new entry (after the title line)
+          if [ -f CHANGELOG.md ]; then
+            # Insert after the first line (title)
+            echo "$ENTRY" > /tmp/new_entry.txt
+            {
+              head -1 CHANGELOG.md
+              echo ""
+              cat /tmp/new_entry.txt
+              tail -n +2 CHANGELOG.md
+            } > CHANGELOG.md.tmp
+            mv CHANGELOG.md.tmp CHANGELOG.md
+          else
+            echo "# Niyphergal 更新日志" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            echo "$ENTRY" >> CHANGELOG.md
+          fi
+
+      - name: Commit VERSION and CHANGELOG.md
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add VERSION CHANGELOG.md
+          git diff --cached --quiet || git commit -m "chore: bump version to $(cat VERSION)"
+          git push
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [build, changelog]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -40,4 +184,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=niyphergal
+          command: pages deploy dist --project-name=niyphergal --commit-message="${{ needs.build.outputs.version }}"
