@@ -1,4 +1,4 @@
-import { ImagePreloader } from './modules/data.js';
+﻿import { ImagePreloader } from './modules/data.js';
 import { SearchSuggestion } from './modules/search.js';
 import { ThemeManager } from './modules/theme.js';
 import { router, updateNav, showAnnouncement } from './modules/router.js';
@@ -6,7 +6,7 @@ import { DB } from './modules/data.js';
 import { debounce, escapeHtml, showNotification } from './modules/utils.js';
 import { CONFIG } from './modules/config.js';
 import { ErrorHandler } from './modules/errorHandler.js';
-import { EventDelegation } from './modules/eventDelegation.js';
+import { EventDelegation } from './modules/eventdelegation.js';
 import { Store, authFlowState } from './modules/store.js';
 import { initRipple } from './modules/ripple.js';
 import { initFormKeyboardHandler } from './modules/form.js';

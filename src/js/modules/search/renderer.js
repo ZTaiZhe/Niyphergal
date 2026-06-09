@@ -1278,15 +1278,23 @@ export function render(routerInstance, mode = 'push') {
                 searchSection.classList.add('page-slide-up-enter-active');
                 // Force reflow so the initial translateY(100%) takes effect
                 void searchSection.offsetHeight;
-                searchSection.classList.add('is-visible');
-                waitForAnimationEnd(searchSection, SEARCH_PAGE_ENTER_DURATION).then(function() {
-                    searchSection.classList.remove('page-slide-up-enter-active', 'is-visible');
+                searchSection.classList.add('slide-visible');
+
+                // Safety guard: ensure afterPageSwitch runs even if transitionend never fires
+                let _searchEnterHandled = false;
+                const _handleSearchEnterComplete = function() {
+                    if (_searchEnterHandled) return;
+                    _searchEnterHandled = true;
+                    searchSection.classList.remove('page-slide-up-enter-active', 'slide-visible');
                     afterPageSwitch(router.current, _shouldPreserve, _isHeroExit, _heroExitGameId);
                     let cardsContainer = searchSection.querySelector('.game-cards-container');
                     if (cardsContainer) {
                         executeEnteringAnimation(cardsContainer);
                     }
-                });
+                };
+
+                waitForAnimationEnd(searchSection, SEARCH_PAGE_ENTER_DURATION).then(_handleSearchEnterComplete);
+                setTimeout(_handleSearchEnterComplete, SEARCH_PAGE_ENTER_DURATION + 200);
             } else {
                 afterPageSwitch(router.current, _shouldPreserve, _isHeroExit, _heroExitGameId);
             }
@@ -1308,12 +1316,20 @@ export function render(routerInstance, mode = 'push') {
                 searchSection.classList.add('page-slide-down-exit-active');
                 void searchSection.offsetHeight;
                 searchSection.classList.add('is-leaving');
-                waitForAnimationEnd(searchSection, SEARCH_PAGE_EXIT_DURATION).then(function() {
+
+                // Safety guard: ensure cleanup runs even if transitionend never fires
+                let _searchExitHandled = false;
+                const _handleSearchExitComplete = function() {
+                    if (_searchExitHandled) return;
+                    _searchExitHandled = true;
                     searchSection.classList.remove('page-slide-down-exit-active', 'is-leaving');
                     searchSection.style.display = 'none';
                     _renderedSections.add(currentCacheKey);
                     afterPageSwitch(router.current, _shouldPreserve, _isHeroExit, _heroExitGameId);
-                });
+                };
+
+                waitForAnimationEnd(searchSection, SEARCH_PAGE_EXIT_DURATION).then(_handleSearchExitComplete);
+                setTimeout(_handleSearchExitComplete, SEARCH_PAGE_EXIT_DURATION + 200);
             } else {
                 if (searchSection) searchSection.style.display = 'none';
                 _renderedSections.add(currentCacheKey);
