@@ -211,17 +211,17 @@ jobs:
 
           # Determine change type from commit message prefix
           if echo "$COMMIT_TITLE" | grep -qE '^feat!?:'; then
-            CHANGE_TYPE="✨ 新功能"
+            CHANGE_TYPE="新功能"
           elif echo "$COMMIT_TITLE" | grep -qE '^fix'; then
-            CHANGE_TYPE="🐛 Bug 修复"
+            CHANGE_TYPE="Bug 修复"
           elif echo "$COMMIT_TITLE" | grep -qE '^docs'; then
-            CHANGE_TYPE="📝 文档"
+            CHANGE_TYPE="文档"
           elif echo "$COMMIT_TITLE" | grep -qE '^refactor'; then
-            CHANGE_TYPE="♻️ 重构"
+            CHANGE_TYPE="重构"
           elif echo "$COMMIT_TITLE" | grep -qE '^chore'; then
-            CHANGE_TYPE="🔧 维护"
+            CHANGE_TYPE="维护"
           else
-            CHANGE_TYPE="📦 其他"
+            CHANGE_TYPE="其他"
           fi
 
           # Extract change details (commit body after first line)
@@ -233,30 +233,30 @@ jobs:
           # First release: show project intro instead of change details
           if [ "$VERSION" = "Alpha 0.0.1" ] || echo "$VERSION" | grep -qE '^Alpha 0\.0\.1 '; then
             {
-              echo "**Niyphergal** — ACG 资源导航站"
+              echo "**Niyphergal** -- ACG 资源导航站"
               echo ""
               echo "基于 Vanilla JS SPA 架构，使用 Vite 构建 + Tailwind CSS 样式，部署于 Cloudflare Pages。"
               echo ""
               echo "核心功能："
-              echo "- 🎯 ACG 资源分类导航"
-              echo "- 🔍 拼音/模糊搜索"
-              echo "- 🎨 流畅的页面过渡动画"
-              echo "- 📱 响应式设计，适配多端"
+              echo "- ACG 资源分类导航"
+              echo "- 拼音/模糊搜索"
+              echo "- 流畅的页面过渡动画"
+              echo "- 响应式设计，适配多端"
             } > /tmp/intro.txt
             CHANGE_DETAILS=$(cat /tmp/intro.txt)
-            CHANGE_TYPE="🚀 首版发布"
+            CHANGE_TYPE="首版发布"
           fi
 
           # Determine detail section title based on version
           if [ "$VERSION" = "Alpha 0.0.1" ] || echo "$VERSION" | grep -qE '^Alpha 0\.0\.1 '; then
-            DETAIL_TITLE="## 📝 项目简介"
+            DETAIL_TITLE="## 项目简介"
           else
-            DETAIL_TITLE="## 📝 改动细节"
+            DETAIL_TITLE="## 改动细节"
           fi
 
           # Build release body
           {
-            echo "## 📋 版本信息"
+            echo "## 版本信息"
             echo ""
             echo "| 项目 | 值 |"
             echo "|------|-----|"
@@ -270,7 +270,7 @@ jobs:
             echo ""
             echo "${CHANGE_DETAILS}"
             echo ""
-            echo "## 🌐 部署地址"
+            echo "## 部署地址"
             echo ""
             echo "https://niyphergal.pages.dev"
           } > /tmp/release_body.md
