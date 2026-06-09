@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260609_3)
+- **时间**: 2026-06-10 01:58 CST
+- **Commit**: 456c84f - fix: release job pull latest commit before creating tag
+- **构建产物**: 5.1M
+- **变更**: fix: release job pull latest commit before creating tag
+
+
 ## Alpha 0.0.1 (build_260609_2)
 - **时间**: 2026-06-10 01:52 CST
 - **Commit**: 7d87e60 - chore: remove emoji from CI release and CHANGELOG, add no-emoji rule
