@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260609_8)
+- **时间**: 2026-06-10 00:22 CST
+- **Commit**: 441bc25 - chore: full pipeline test - verify CI/CD end-to-end
+- **构建产物**: 5.1M
+- **变更**: chore: full pipeline test - verify CI/CD end-to-end
+
+
 ## Alpha 0.0.1 (build_260609_7)
 - **时间**: 2026-06-09 23:19 CST
 - **Commit**: b43c076 - fix: resolve YAML indentation error in ci.yml and prevent CI infinite loop
