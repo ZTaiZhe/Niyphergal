@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260609_5)
+- **时间**: 2026-06-10 02:08 CST
+- **Commit**: 06ab17f - chore: add no-emoji rule to project rules
+- **构建产物**: 5.1M
+- **变更**: chore: add no-emoji rule to project rules
+
+
 ## Alpha 0.0.1 (build_260609_4)
 - **时间**: 2026-06-10 02:04 CST
 - **Commit**: 68364d4 - Merge branch 'main' of https://github.com/ZTaiZhe/Niyphergal
