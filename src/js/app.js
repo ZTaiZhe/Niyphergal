@@ -1,4 +1,4 @@
-﻿import { ImagePreloader } from './modules/data.js';
+import { ImagePreloader } from './modules/data.js';
 import { SearchSuggestion } from './modules/search.js';
 import { ThemeManager } from './modules/theme.js';
 import { router, updateNav, showAnnouncement } from './modules/router.js';

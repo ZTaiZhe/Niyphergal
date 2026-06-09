@@ -8,4 +8,3 @@ dist/
 .DS_Store
 Thumbs.db
 github-recovery-codes.txt
-node_modules
