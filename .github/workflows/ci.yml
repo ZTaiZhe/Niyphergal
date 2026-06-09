@@ -230,6 +230,30 @@ jobs:
             CHANGE_DETAILS="$COMMIT_TITLE"
           fi
 
+          # First release: show project intro instead of change details
+          if [ "$VERSION" = "Alpha 0.0.1" ] || echo "$VERSION" | grep -qE '^Alpha 0\.0\.1 '; then
+            {
+              echo "**Niyphergal** — ACG 资源导航站"
+              echo ""
+              echo "基于 Vanilla JS SPA 架构，使用 Vite 构建 + Tailwind CSS 样式，部署于 Cloudflare Pages。"
+              echo ""
+              echo "核心功能："
+              echo "- 🎯 ACG 资源分类导航"
+              echo "- 🔍 拼音/模糊搜索"
+              echo "- 🎨 流畅的页面过渡动画"
+              echo "- 📱 响应式设计，适配多端"
+            } > /tmp/intro.txt
+            CHANGE_DETAILS=$(cat /tmp/intro.txt)
+            CHANGE_TYPE="🚀 首版发布"
+          fi
+
+          # Determine detail section title based on version
+          if [ "$VERSION" = "Alpha 0.0.1" ] || echo "$VERSION" | grep -qE '^Alpha 0\.0\.1 '; then
+            DETAIL_TITLE="## 📝 项目简介"
+          else
+            DETAIL_TITLE="## 📝 改动细节"
+          fi
+
           # Build release body
           {
             echo "## 📋 版本信息"
@@ -242,7 +266,7 @@ jobs:
             echo "| 构建产物 | ${ARTIFACT_SIZE} |"
             echo "| 改动类型 | ${CHANGE_TYPE} |"
             echo ""
-            echo "## 📝 改动细节"
+            echo "${DETAIL_TITLE}"
             echo ""
             echo "${CHANGE_DETAILS}"
             echo ""

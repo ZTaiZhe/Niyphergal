@@ -1,5 +1,6 @@
-# Niyphergal 更新日志
+﻿# Niyphergal 更新日志
 
+<<<<<<< HEAD
 ## Alpha 0.0.2 (build_260609_1)
 - **时间**: 2026-06-10 00:49 CST
 - **Commit**: b343dda - feat!: remove dot folders and wrangler files from tracking, add release job to CI
@@ -55,3 +56,5 @@
 - **Commit**: 7547c48 - init: initial commit with CI/CD pipeline
 - **构建产物**: N/A（构建失败）
 - **变更**: 初始提交，建立 CI/CD 流水线
+=======
+>>>>>>> f3a12588 (feat!: reset version to 0.0.1, add project intro for first release)
