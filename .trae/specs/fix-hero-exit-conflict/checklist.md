@@ -1,7 +1,0 @@
-- [x] Hero exit 路径不再直接 return，而是设置 _isHeroExit 和 _heroExitGameId，继续走到页面过渡动画分支
-- [x] Hero exit 场景下，页面过渡动画（淡入）正常播放
-- [x] Hero exit 场景下，hero clone 飞行动画从详情页图片位置飞回卡片位置，与页面过渡动画协调
-- [x] 页面过渡动画完成后，hero exit 特殊逻辑正确执行（revealHomeCardsImmediately 替代 initHomeAnimations）
-- [x] hero:exit-complete 事件正确触发 revealFlownCard，飞出卡片恢复显示
-- [x] Hero exit 路径通过正常内容生成流程自动更新 _pageCache['home']，缓存与 DOM 一致
-- [x] 非 hero exit 路径从详情页返回首页时，clearHeroExitContext() 正确清理上下文，页面过渡动画正常

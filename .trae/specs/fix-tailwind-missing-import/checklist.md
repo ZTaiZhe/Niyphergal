@@ -1,9 +1,0 @@
-- [x] `src/css/main.css` 包含 `@import "tailwindcss"` 指令
-- [x] Tailwind 工具类样式在页面中正确生效（flex, items-center, fixed, w-full 等）
-- [x] 自定义 CSS 变量（tokens.css 中定义的）在 Tailwind 引入后仍正常工作
-- [x] 亚克力效果（acrylic-panel, glass-card）样式正常
-- [x] 暗色模式切换正常工作
-- [x] `vite build` 构建成功且产物包含 Tailwind CSS
-- [x] `vite dev` 开发服务器启动正常且页面样式恢复
-- [x] 页面缩放和响应式布局正常
-- [x] 导航栏、搜索栏、底部 Docker 栏等控件样式正常

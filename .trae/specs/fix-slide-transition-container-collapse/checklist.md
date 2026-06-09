@@ -1,9 +1,0 @@
-- [ ] 进入 section（animate-slide-in-right/left, animate-fade-in）不再设 position: absolute，保持在正常文档流
-- [ ] 退出 section（animate-slide-out-left/right, animate-fade-out）保持 position: absolute; z-index: 5
-- [ ] 动画期间 main-container 临时设 overflow: hidden，动画结束后恢复
-- [ ] 动画期间 main-container 有 position: relative 作为定位上下文
-- [ ] 动画 class 添加时序正确：先退出 class + reflow，再进入 class
-- [ ] push 方向正确：旧页面左滑出、新页面右滑入，容器不塌陷
-- [ ] pop 方向正确：旧页面右滑出、新页面左滑入，容器不塌陷
-- [ ] preserveExisting 时 section DOM 状态保持
-- [ ] vite build 无错误

@@ -1,7 +1,0 @@
-- [x] 亮色背景色为 #f8fafc，暗色背景色为 #0f172a
-- [x] GameCard 图片全铺 + 底部 50% 渐变遮罩 + 白色标题带阴影 + 标签在底部
-- [x] TagChip 为粉色半透明背景 + 毛玻璃 + 圆角
-- [x] DockerNav 为浮动毛玻璃底部栏，居中圆角，宽度 min(600px, 95vw)
-- [x] SearchBarWidget 为 pill 形状 + 毛玻璃背景 + focus 粉色下划线
-- [x] GlassCard 使用 acrylic 渐变背景（135deg 线性渐变）
-- [x] 部署后页面视觉与 React 版一致（已部署至 https://fb113193.niyphergal.pages.dev，需人工确认视觉）

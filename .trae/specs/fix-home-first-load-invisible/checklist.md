@@ -1,4 +1,0 @@
-- [x] router.previous === router.current 时跳过 slide 动画，走 fallback 直接注入
-- [x] 首次加载首页内容正常显示
-- [x] 正常页面切换 slide 动画不受影响
-- [x] vite build 无错误

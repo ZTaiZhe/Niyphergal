@@ -8,3 +8,9 @@ dist/
 .DS_Store
 Thumbs.db
 github-recovery-codes.txt
+
+# IDE and tool config (not for deployment)
+.trae/
+.vscode/
+wrangler.toml
+.wranglerignore

@@ -1,8 +1,0 @@
-- [x] 搜索页进入动画不使用 `position: absolute`，section 保持在正常文档流中
-- [x] 搜索页退出动画不使用 `position: absolute`
-- [x] 搜索 section 动画类名使用 `slide-visible`，不与卡片 `is-visible` 冲突
-- [x] 搜索页进入后排序/筛选/排序按钮可正常点击
-- [x] 搜索页进入后卡片布局正常，无错位
-- [x] 搜索页退出后目标页面正常显示
-- [x] `afterPageSwitch` 和 `bindSearchControlsDelegated` 在动画超时后仍能执行
-- [x] 构建成功，部署正常

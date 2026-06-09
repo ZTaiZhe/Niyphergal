@@ -1,7 +1,0 @@
-- [x] Hero exit 时首页无页面级滑入动画（无 animate-slide-in-left 效果）
-- [x] 非飞行卡片瞬间出现（无 0.3s CSS transition 渐入）
-- [x] 飞行中的卡片在飞行动画期间不可见（opacity: 0）
-- [x] 飞行动画完成后，飞行卡片淡入显示
-- [x] render() 顶部拦截 hero exit 路径，不再依赖各分支补丁
-- [x] clearHeroExitContext 不在 hero exit 拦截前被调用
-- [x] 非 hero exit 的正常导航流程不受影响

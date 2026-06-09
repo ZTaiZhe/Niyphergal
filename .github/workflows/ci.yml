@@ -186,3 +186,79 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           command: pages deploy dist --project-name=niyphergal --commit-message="${{ needs.build.outputs.version }}"
+
+  release:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: version
+      - name: Create GitHub Release
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+          ARTIFACT_SIZE: ${{ needs.build.outputs.artifact_size }}
+          COMMIT_SHA: ${{ github.sha }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          SHORT_SHA=$(echo "$COMMIT_SHA" | cut -c1-7)
+          COMMIT_TITLE=$(echo "$COMMIT_MSG" | head -1)
+          TIMESTAMP=$(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M CST')
+
+          # Determine change type from commit message prefix
+          if echo "$COMMIT_TITLE" | grep -qE '^feat!?:'; then
+            CHANGE_TYPE="✨ 新功能"
+          elif echo "$COMMIT_TITLE" | grep -qE '^fix'; then
+            CHANGE_TYPE="🐛 Bug 修复"
+          elif echo "$COMMIT_TITLE" | grep -qE '^docs'; then
+            CHANGE_TYPE="📝 文档"
+          elif echo "$COMMIT_TITLE" | grep -qE '^refactor'; then
+            CHANGE_TYPE="♻️ 重构"
+          elif echo "$COMMIT_TITLE" | grep -qE '^chore'; then
+            CHANGE_TYPE="🔧 维护"
+          else
+            CHANGE_TYPE="📦 其他"
+          fi
+
+          # Extract change details (commit body after first line)
+          CHANGE_DETAILS=$(echo "$COMMIT_MSG" | tail -n +2 | sed '/^$/d' | head -5)
+          if [ -z "$CHANGE_DETAILS" ]; then
+            CHANGE_DETAILS="$COMMIT_TITLE"
+          fi
+
+          # Build release body
+          {
+            echo "## 📋 版本信息"
+            echo ""
+            echo "| 项目 | 值 |"
+            echo "|------|-----|"
+            echo "| 版本号 | ${VERSION} |"
+            echo "| 构建时间 | ${TIMESTAMP} |"
+            echo "| Commit | \`${SHORT_SHA}\` ${COMMIT_TITLE} |"
+            echo "| 构建产物 | ${ARTIFACT_SIZE} |"
+            echo "| 改动类型 | ${CHANGE_TYPE} |"
+            echo ""
+            echo "## 📝 改动细节"
+            echo ""
+            echo "${CHANGE_DETAILS}"
+            echo ""
+            echo "## 🌐 部署地址"
+            echo ""
+            echo "https://niyphergal.pages.dev"
+          } > /tmp/release_body.md
+
+          # Create tag and release
+          TAG_NAME=$(echo "$VERSION" | tr ' ' '_' | tr -d '()')
+          echo "Creating release with tag: ${TAG_NAME}"
+          echo "tag_name=$TAG_NAME" >> $GITHUB_ENV
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.tag_name }}
+          name: ${{ needs.build.outputs.version }}
+          body_path: /tmp/release_body.md
+          draft: false
+          prerelease: true

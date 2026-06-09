@@ -1,8 +1,0 @@
-- [x] animationHelpers.js 不再导入 initHomeAnimations
-- [x] cleanup 中不再调用 initHomeAnimations
-- [x] isHeroExitInFlight 导出已删除
-- [x] renderer.js 动画分支 home 判断不含 isHeroExitInFlight
-- [x] renderer.js else 分支 home 判断不含 isHeroExitInFlight
-- [x] 退出飞行期间卡片在 clone 下方正常动画
-- [x] clone 移除后卡片已完好显示
-- [x] 正常首页进入卡片动画不受影响

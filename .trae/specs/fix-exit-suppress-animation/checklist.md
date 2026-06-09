@@ -1,7 +1,0 @@
-- [x] isHeroExitInFlight() 重新导出
-- [x] revealHomeCardsImmediately() 函数存在且正确实现
-- [x] 动画分支条件包含 `!isHeroExitInFlight()`
-- [x] else 分支使用 revealHomeCardsImmediately 当 hero exit 时
-- [x] 退出飞行时无页面滑入动画
-- [x] 退出飞行时卡片立即可见（无 is-hidden 闪烁）
-- [x] 正常进入首页卡片 stagger 动画不受影响

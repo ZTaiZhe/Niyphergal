@@ -1,6 +1,0 @@
-- [x] 进入详情页后 header 返回箭头图标可见
-- [x] 返回首页后返回箭头隐藏，Logo 文字恢复
-- [x] 从详情页返回首页时 Logo 按钮从圆形平滑展开为药丸形（约 400ms 过渡动画可见）
-- [x] 点击详情页内返回按钮可正确导航回首页
-- [x] 返回箭头显隐仅通过 CSS opacity 控制，无内联 display:none 干扰
-- [x] morphBackToLogo 测量目标尺寸时 CSS transition 已临时禁用

@@ -1,5 +1,0 @@
-- [x] pop 模式不进入过渡动画分支，直接 injectSection 渲染
-- [x] 公告弹窗在 injectSection 之后调用，显示稳定不消失
-- [x] Hero 飞行过渡正常：detail:rendered 事件触发，hero-clone 动画执行
-- [x] Docker 栏 z-index 为 9999，始终在最顶层不被遮挡
-- [x] push 模式下的页面切换动画正常

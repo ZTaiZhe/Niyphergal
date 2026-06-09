@@ -1,5 +1,0 @@
-- [x] detail:rendered 监听器在 router.push 之前注册
-- [x] 点击游戏卡片时 hero-clone 飞行到目标位置并播放弹簧动画
-- [x] 详情页 stagger 内容在飞行结束后渐显
-- [x] 800ms fallback 不被触发（正常路径）
-- [x] 无 JS 运行时错误

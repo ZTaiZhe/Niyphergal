@@ -1,6 +1,0 @@
-- [x] injectSection 在创建 section 前清理 .page-transition-container 和 .search-page-transition-container
-- [x] prefers-reduced-motion 用户完全跳过动画，直接渲染内容
-- [x] 首次加载 home 页面不进入动画分支
-- [x] 残留 console.log / console.error 调试代码已移除
-- [x] 页面切换后布局正常，无位置错乱或重叠
-- [x] docker 栏各页面切换功能正常

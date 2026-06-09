@@ -1,4 +1,0 @@
-- [x] `.modal-overlay` 有固定定位、全屏覆盖、半透明背景、z-index 样式
-- [x] `.modal-overlay.hidden` 正确隐藏（display: none 优先级高于 flex）
-- [x] 首页加载后公告弹窗以覆盖层形式显示在屏幕顶层（无需滚动）
-- [x] 点击"我知道了"按钮后公告弹窗正确关闭
