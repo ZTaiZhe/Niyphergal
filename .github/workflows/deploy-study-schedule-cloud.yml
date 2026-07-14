@@ -168,7 +168,7 @@ jobs:
             const source = JSON.parse(fs.readFileSync("wrangler.jsonc", "utf8"));
             source.vars = {
               ...source.vars,
-              ALLOWED_ORIGIN: `https://${process.env.SITE_HOSTNAME}`,
+              ALLOWED_ORIGINS: `https://schedule.niypher.wiki,https://niypher-study-schedule.pages.dev`,
               ENVIRONMENT: "production"
             };
             source.d1_databases = [{

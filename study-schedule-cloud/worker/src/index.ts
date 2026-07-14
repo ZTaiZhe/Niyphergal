@@ -5,7 +5,14 @@ import { cors, error, json } from "./response";
 import { activeSession, requireCsrf, revokeAllSessions, revokeSession } from "./sessions";
 import { pull, push } from "./sync";
 
-type WorkerEnv = Env & { BOOTSTRAP_INVITE: string; ALLOWED_ORIGIN: string; PBKDF2_ITERATIONS: string };
+type WorkerEnv = Env & { BOOTSTRAP_INVITE: string; ALLOWED_ORIGINS: string; PBKDF2_ITERATIONS: string };
+
+function resolveOrigin(env: WorkerEnv, request: Request): string | null {
+  const origin = request.headers.get("Origin");
+  if (!origin) return null;
+  const allowed = env.ALLOWED_ORIGINS.split(",").map(o => o.trim());
+  return allowed.includes(origin) ? origin : null;
+}
 
 async function limited(request: Request, limiter: RateLimit, scope: string): Promise<Response | null> {
   const source = request.headers.get("CF-Connecting-IP") ?? "local";
@@ -24,8 +31,8 @@ async function readBody(request: Request): Promise<unknown> {
 
 async function handle(request: Request, env: WorkerEnv): Promise<Response> {
   const url = new URL(request.url);
-  const origin = request.headers.get("Origin");
-  if (origin && origin !== env.ALLOWED_ORIGIN) return error("ORIGIN_DENIED", "请求来源无效", 403);
+  const origin = resolveOrigin(env, request);
+  if (request.headers.get("Origin") && !origin) return error("ORIGIN_DENIED", "请求来源无效", 403);
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: { "Access-Control-Allow-Methods": "GET,POST,OPTIONS", "Access-Control-Allow-Headers": "Content-Type,X-CSRF-Token,X-Device-Label" } });
   if (url.pathname.startsWith("/api/auth/") && url.pathname !== "/api/auth/session") { const denied = await limited(request, env.AUTH_RATE_LIMIT, "auth"); if (denied) return denied; }
   if (url.pathname.startsWith("/api/sync/")) { const denied = await limited(request, env.SYNC_RATE_LIMIT, "sync"); if (denied) return denied; }
@@ -54,12 +61,14 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
 
 export default {
   async fetch(request: Request, env: WorkerEnv): Promise<Response> {
+    const origin = resolveOrigin(env, request);
+    const corsOrigin = origin || env.ALLOWED_ORIGINS.split(",")[0].trim();
     try {
       const response = await handle(request, env);
-      return cors(response, env.ALLOWED_ORIGIN);
+      return cors(response, corsOrigin);
     } catch (cause) {
       console.error(JSON.stringify({ event: "request_error", message: cause instanceof Error ? cause.message : "unknown" }));
-      return cors(error("INTERNAL_ERROR", "服务暂时不可用", 500), env.ALLOWED_ORIGIN);
+      return cors(error("INTERNAL_ERROR", "服务暂时不可用", 500), corsOrigin);
     }
   },
 } satisfies ExportedHandler<WorkerEnv>;

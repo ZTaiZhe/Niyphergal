@@ -5,7 +5,7 @@
   "compatibility_date": "2026-07-13",
   "compatibility_flags": ["nodejs_compat"],
   "vars": {
-    "ALLOWED_ORIGIN": "http://localhost:4173",
+    "ALLOWED_ORIGINS": "http://localhost:4173",
     "ENVIRONMENT": "development",
     "PBKDF2_ITERATIONS": "210000"
   },
