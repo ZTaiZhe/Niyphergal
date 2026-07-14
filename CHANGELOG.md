@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_17)
+- **时间**: 2026-07-15 02:03 CST
+- **Commit**: 1fa54c2 - debug: better error reporting for reset-bootstrap
+- **构建产物**: 5.1M
+- **变更**: debug: better error reporting for reset-bootstrap
+
+
 ## Alpha 0.0.1 (build_260714_16)
 - **时间**: 2026-07-15 02:00 CST
 - **Commit**: 476df25 - fix: use parameterized query for reset-bootstrap
