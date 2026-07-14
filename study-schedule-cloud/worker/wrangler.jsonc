@@ -7,7 +7,7 @@
   "vars": {
     "ALLOWED_ORIGINS": "http://localhost:4173",
     "ENVIRONMENT": "development",
-    "PBKDF2_ITERATIONS": "210000"
+    "PBKDF2_ITERATIONS": "100000"
   },
   "d1_databases": [
     {

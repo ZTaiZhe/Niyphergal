@@ -43,21 +43,6 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
   if (url.pathname === "/api/auth/bootstrap-register" && request.method === "POST") return bootstrapRegister(request, env, body as any);
   if (url.pathname === "/api/auth/register" && request.method === "POST") return register(request, env, body as any);
   if (url.pathname === "/api/auth/login" && request.method === "POST") return login(request, env, body as any);
-  if (url.pathname === "/api/debug" && request.method === "GET") return json({ bootstrap_invite_len: env.BOOTSTRAP_INVITE?.length ?? -1, pbkdf2: env.PBKDF2_ITERATIONS, allowed_origins: env.ALLOWED_ORIGINS, env_keys: Object.keys(env).filter(k => !k.startsWith("_")) });
-  if (url.pathname === "/api/debug-register" && request.method === "POST") {
-    const b = body as Record<string, unknown>;
-    const { normalizeEmail, validatePassword } = await import("./validation");
-    const { constantTimeTextEqual, hashPassword, pbkdf2Iterations } = await import("./crypto");
-    const steps: Record<string, string> = {};
-    try { normalizeEmail(b.email); steps.email = "ok"; } catch (e: any) { steps.email = `fail: ${e.message}`; }
-    try { validatePassword(b.password); steps.password = "ok"; } catch (e: any) { steps.password = `fail: ${e.message}`; }
-    steps.invite_type = typeof b.invite;
-    steps.invite_match = String(await constantTimeTextEqual(String(b.invite || ""), env.BOOTSTRAP_INVITE));
-    try { steps.hash = "ok"; const iters = pbkdf2Iterations(env); steps.iterations = String(iters); if (b._doHash) { await hashPassword(String(b.password), iters); steps.hashActual = "ok"; } } catch (e: any) { steps.hash = `fail: ${e.message}`; }
-    const bs = await env.DB.prepare("SELECT admin_user_id, initialized_at FROM bootstrap_state WHERE id=1").first<{admin_user_id: string | null, initialized_at: number | null}>();
-    steps.bootstrap_state = bs ? JSON.stringify(bs) : "no row";
-    return json({ steps });
-  }
   const session = await activeSession(request, env.DB);
   if (url.pathname === "/api/auth/session" && request.method === "GET") return session ? json({ ok: true, user: session.user }) : error("AUTH_REQUIRED", "需要登录", 401);
   if (!session) return error("AUTH_REQUIRED", "需要登录", 401);
