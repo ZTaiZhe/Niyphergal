@@ -1,0 +1,179 @@
+name: Deploy Study Schedule Cloud
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-study-schedule-cloud
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  WORKER_DIR: study-schedule-cloud/worker
+  SITE_DIR: study-schedule-cloud/site
+  WORKER_NAME: niypher-study-cloud-sync
+  D1_DATABASE_NAME: niypher-study-cloud
+  PAGES_PROJECT_NAME: niypher-study-schedule
+  API_HOSTNAME: api.niypher.com
+  SITE_HOSTNAME: schedule.niypher.com
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      BOOTSTRAP_INVITE: ${{ secrets.BOOTSTRAP_INVITE }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: study-schedule-cloud/worker/package-lock.json
+
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID BOOTSTRAP_INVITE; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::Required GitHub secret is missing: ${name/CLOUDFLARE_/CF_}"
+              exit 1
+            fi
+          done
+
+      - name: Install Worker dependencies
+        working-directory: ${{ env.WORKER_DIR }}
+        run: npm ci
+
+      - name: Test and type-check Worker
+        working-directory: ${{ env.WORKER_DIR }}
+        run: npm run typecheck && npm test
+
+      - name: Create or reuse D1 and generate deployment config
+        id: d1
+        working-directory: ${{ env.WORKER_DIR }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          D1_ID=$(npx wrangler d1 list --json | node -e '
+            let input = "";
+            process.stdin.on("data", chunk => input += chunk);
+            process.stdin.on("end", () => {
+              const rows = JSON.parse(input);
+              const match = rows.find(row => row.name === process.env.D1_DATABASE_NAME);
+              if (match) process.stdout.write(match.uuid || match.id || "");
+            });
+          ')
+          if [ -z "$D1_ID" ]; then
+            npx wrangler d1 create "$D1_DATABASE_NAME"
+            D1_ID=$(npx wrangler d1 list --json | node -e '
+              let input = "";
+              process.stdin.on("data", chunk => input += chunk);
+              process.stdin.on("end", () => {
+                const rows = JSON.parse(input);
+                const match = rows.find(row => row.name === process.env.D1_DATABASE_NAME);
+                if (match) process.stdout.write(match.uuid || match.id || "");
+              });
+            ')
+          fi
+          if [ -z "$D1_ID" ]; then
+            echo "::error::Unable to resolve D1 database id"
+            exit 1
+          fi
+          echo "database_id=$D1_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Generate Worker deployment config
+        working-directory: ${{ env.WORKER_DIR }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          D1_ID="$D1_ID" node -e '
+            const fs = require("fs");
+            const source = JSON.parse(fs.readFileSync("wrangler.jsonc", "utf8"));
+            source.vars = {
+              ...source.vars,
+              ALLOWED_ORIGIN: `https://${process.env.SITE_HOSTNAME}`,
+              ENVIRONMENT: "production"
+            };
+            source.d1_databases = [{
+              binding: "DB",
+              database_name: process.env.D1_DATABASE_NAME,
+              database_id: process.env.D1_ID,
+              migrations_dir: "migrations"
+            }];
+            fs.writeFileSync("wrangler.deploy.jsonc", JSON.stringify(source, null, 2) + "\n");
+          '
+        env:
+          D1_ID: ${{ steps.d1.outputs.database_id }}
+
+      - name: Apply D1 migrations
+        working-directory: ${{ env.WORKER_DIR }}
+        run: npx wrangler d1 migrations apply "$D1_DATABASE_NAME" --remote --config wrangler.deploy.jsonc
+
+      - name: Deploy Worker
+        working-directory: ${{ env.WORKER_DIR }}
+        run: npx wrangler deploy --config wrangler.deploy.jsonc
+
+      - name: Configure Worker bootstrap secret
+        working-directory: ${{ env.WORKER_DIR }}
+        shell: bash
+        run: printf '%s' "$BOOTSTRAP_INVITE" | npx wrangler secret put BOOTSTRAP_INVITE --config wrangler.deploy.jsonc
+
+      - name: Create Pages project if needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! npx wrangler pages project list | grep -Fq "$PAGES_PROJECT_NAME"; then
+            npx wrangler pages project create "$PAGES_PROJECT_NAME" --production-branch main
+          fi
+
+      - name: Prepare Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -R "$SITE_DIR" "$RUNNER_TEMP/study-schedule-site"
+          SITE_ROOT="$RUNNER_TEMP/study-schedule-site" node -e '
+            const fs = require("fs");
+            const path = require("path");
+            const file = path.join(process.env.SITE_ROOT, "index.html");
+            const html = fs.readFileSync(file, "utf8");
+            const marker = `<meta name="niypher-api-origin" content="">`;
+            if (!html.includes(marker)) throw new Error("API origin marker was not found");
+            fs.writeFileSync(file, html.replace(marker, `<meta name="niypher-api-origin" content="https://${process.env.API_HOSTNAME}">`));
+          '
+
+      - name: Deploy static site to Pages
+        run: npx wrangler pages deploy "$RUNNER_TEMP/study-schedule-site" --project-name "$PAGES_PROJECT_NAME" --branch main --commit-hash "${{ github.sha }}"
+
+      - name: Best-effort custom domains
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -u
+          api() {
+            curl --fail-with-body --silent --show-error \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -H "Content-Type: application/json" "$@"
+          }
+          ZONE_ID=$(api "https://api.cloudflare.com/client/v4/zones?name=niypher.com&account.id=$CLOUDFLARE_ACCOUNT_ID" | node -e '
+            let input = "";
+            process.stdin.on("data", chunk => input += chunk);
+            process.stdin.on("end", () => process.stdout.write(JSON.parse(input).result?.[0]?.id || ""));
+          ')
+          if [ -z "$ZONE_ID" ]; then
+            echo "::warning::niypher.com zone was not found; skipping custom domains"
+            exit 0
+          fi
+          export ZONE_ID
+          WORKER_BODY=$(node -e 'process.stdout.write(JSON.stringify({environment:"production",hostname:process.env.API_HOSTNAME,service:process.env.WORKER_NAME,zone_id:process.env.ZONE_ID}))')
+          api --request PUT --data "$WORKER_BODY" "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/domains/records" >/dev/null || \
+            echo "::warning::Could not configure $API_HOSTNAME"
+          PAGES_BODY=$(node -e 'process.stdout.write(JSON.stringify({name:process.env.SITE_HOSTNAME}))')
+          api --request POST --data "$PAGES_BODY" "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PAGES_PROJECT_NAME/domains" >/dev/null || \
+            echo "::warning::Could not configure $SITE_HOSTNAME"
