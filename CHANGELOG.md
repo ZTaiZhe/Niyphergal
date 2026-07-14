@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_7)
+- **时间**: 2026-07-14 23:49 CST
+- **Commit**: 20f9c35 - chore: trigger deploy with updated D1 token permissions
+- **构建产物**: 5.1M
+- **变更**: chore: trigger deploy with updated D1 token permissions
+
+
 ## Alpha 0.0.1 (build_260714_6)
 - **时间**: 2026-07-14 23:27 CST
 - **Commit**: f4a62d1 - fix: deploy study schedule on niypher wiki
