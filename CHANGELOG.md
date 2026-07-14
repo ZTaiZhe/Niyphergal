@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_13)
+- **时间**: 2026-07-15 01:09 CST
+- **Commit**: 471ab5d - debug: check bootstrap_state and actual hash in diag
+- **构建产物**: 5.1M
+- **变更**: debug: check bootstrap_state and actual hash in diag
+
+
 ## Alpha 0.0.1 (build_260714_12)
 - **时间**: 2026-07-15 01:06 CST
 - **Commit**: 4f6a703 - debug: add step-by-step register diagnosis
