@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_15)
+- **时间**: 2026-07-15 01:57 CST
+- **Commit**: cb9fbbc - temp: add reset-bootstrap endpoint for test cleanup
+- **构建产物**: 5.1M
+- **变更**: temp: add reset-bootstrap endpoint for test cleanup
+
+
 ## Alpha 0.0.1 (build_260714_14)
 - **时间**: 2026-07-15 01:12 CST
 - **Commit**: a65e82c - fix: reduce PBKDF2 iterations to 100000 (Workers runtime limit) and remove debug endpoints
