@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_3)
+- **时间**: 2026-07-14 22:46 CST
+- **Commit**: cffca84 - ci: diagnose Cloudflare auth before D1 deploy
+- **构建产物**: 5.1M
+- **变更**: ci: diagnose Cloudflare auth before D1 deploy
+
+
 ## Alpha 0.0.1 (build_260714_2)
 - **时间**: 2026-07-14 22:31 CST
 - **Commit**: 898bbe4 - ci: deploy study schedule cloud on relevant pushes
