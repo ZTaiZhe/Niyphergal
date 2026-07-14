@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_5)
+- **时间**: 2026-07-14 23:16 CST
+- **Commit**: 39f2939 - ci: retry study schedule cloud deploy
+- **构建产物**: 5.1M
+- **变更**: ci: retry study schedule cloud deploy
+
+
 ## Alpha 0.0.1 (build_260714_4)
 - **时间**: 2026-07-14 23:03 CST
 - **Commit**: 0abe2c5 - ci: trigger study schedule cloud deploy
