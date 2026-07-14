@@ -43,7 +43,7 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
   if (url.pathname === "/api/auth/bootstrap-register" && request.method === "POST") return bootstrapRegister(request, env, body as any);
   if (url.pathname === "/api/auth/register" && request.method === "POST") return register(request, env, body as any);
   if (url.pathname === "/api/auth/login" && request.method === "POST") return login(request, env, body as any);
-  if (url.pathname === "/api/reset-bootstrap" && request.method === "POST") { await env.DB.prepare("DELETE FROM sessions WHERE user_id IN (SELECT id FROM users WHERE email_normalized = 'test@niypher.com')").run(); await env.DB.prepare("DELETE FROM users WHERE email_normalized = 'test@niypher.com'").run(); await env.DB.prepare("UPDATE bootstrap_state SET admin_user_id = NULL, initialized_at = NULL WHERE id = 1").run(); return json({ ok: true }); }
+  if (url.pathname === "/api/reset-bootstrap" && request.method === "POST") { const user = await env.DB.prepare("SELECT id FROM users WHERE email_normalized = 'test@niypher.com'").first<{id:string}>(); if (user) { await env.DB.prepare("DELETE FROM sessions WHERE user_id = ?").bind(user.id).run(); await env.DB.prepare("DELETE FROM users WHERE id = ?").bind(user.id).run(); await env.DB.prepare("UPDATE bootstrap_state SET admin_user_id = NULL, initialized_at = NULL WHERE id = 1").run(); } return json({ ok: true }); }
   const session = await activeSession(request, env.DB);
   if (url.pathname === "/api/auth/session" && request.method === "GET") return session ? json({ ok: true, user: session.user }) : error("AUTH_REQUIRED", "需要登录", 401);
   if (!session) return error("AUTH_REQUIRED", "需要登录", 401);
