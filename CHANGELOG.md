@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_11)
+- **时间**: 2026-07-15 00:44 CST
+- **Commit**: 6d8d50c - debug: add temporary /api/debug endpoint for env diagnosis
+- **构建产物**: 5.1M
+- **变更**: debug: add temporary /api/debug endpoint for env diagnosis
+
+
 ## Alpha 0.0.1 (build_260714_10)
 - **时间**: 2026-07-15 00:35 CST
 - **Commit**: 0399b2e - fix: support multiple CORS origins for pages.dev and custom domain
