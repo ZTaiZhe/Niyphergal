@@ -53,7 +53,9 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
     try { validatePassword(b.password); steps.password = "ok"; } catch (e: any) { steps.password = `fail: ${e.message}`; }
     steps.invite_type = typeof b.invite;
     steps.invite_match = String(await constantTimeTextEqual(String(b.invite || ""), env.BOOTSTRAP_INVITE));
-    try { steps.hash = "ok"; const iters = pbkdf2Iterations(env); steps.iterations = String(iters); } catch (e: any) { steps.hash = `fail: ${e.message}`; }
+    try { steps.hash = "ok"; const iters = pbkdf2Iterations(env); steps.iterations = String(iters); if (b._doHash) { await hashPassword(String(b.password), iters); steps.hashActual = "ok"; } } catch (e: any) { steps.hash = `fail: ${e.message}`; }
+    const bs = await env.DB.prepare("SELECT admin_user_id, initialized_at FROM bootstrap_state WHERE id=1").first<{admin_user_id: string | null, initialized_at: number | null}>();
+    steps.bootstrap_state = bs ? JSON.stringify(bs) : "no row";
     return json({ steps });
   }
   const session = await activeSession(request, env.DB);
