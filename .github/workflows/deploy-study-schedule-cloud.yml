@@ -22,8 +22,8 @@ env:
   WORKER_NAME: niypher-study-cloud-sync
   D1_DATABASE_NAME: niypher-study-cloud
   PAGES_PROJECT_NAME: niypher-study-schedule
-  API_HOSTNAME: api.niypher.com
-  SITE_HOSTNAME: schedule.niypher.com
+  API_HOSTNAME: api.niypher.wiki
+  SITE_HOSTNAME: schedule.niypher.wiki
 
 jobs:
   deploy:
@@ -231,13 +231,13 @@ jobs:
               -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
               -H "Content-Type: application/json" "$@"
           }
-          ZONE_ID=$(api "https://api.cloudflare.com/client/v4/zones?name=niypher.com&account.id=$CLOUDFLARE_ACCOUNT_ID" | node -e '
+          ZONE_ID=$(api "https://api.cloudflare.com/client/v4/zones?name=niypher.wiki&account.id=$CLOUDFLARE_ACCOUNT_ID" | node -e '
             let input = "";
             process.stdin.on("data", chunk => input += chunk);
             process.stdin.on("end", () => process.stdout.write(JSON.parse(input).result?.[0]?.id || ""));
           ')
           if [ -z "$ZONE_ID" ]; then
-            echo "::warning::niypher.com zone was not found; skipping custom domains"
+            echo "::warning::niypher.wiki zone was not found; skipping custom domains"
             exit 0
           fi
           export ZONE_ID
