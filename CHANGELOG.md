@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_10)
+- **时间**: 2026-07-15 00:35 CST
+- **Commit**: 0399b2e - fix: support multiple CORS origins for pages.dev and custom domain
+- **构建产物**: 5.1M
+- **变更**: fix: support multiple CORS origins for pages.dev and custom domain
+
+
 ## Alpha 0.0.1 (build_260714_9)
 - **时间**: 2026-07-15 00:07 CST
 - **Commit**: 26f07b7 - chore: redeploy with updated bootstrap invite
