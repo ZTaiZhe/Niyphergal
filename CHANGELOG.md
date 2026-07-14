@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_19)
+- **时间**: 2026-07-15 02:07 CST
+- **Commit**: 6feccc9 - fix: correct audit_logs column names for reset
+- **构建产物**: 5.1M
+- **变更**: fix: correct audit_logs column names for reset
+
+
 ## Alpha 0.0.1 (build_260714_18)
 - **时间**: 2026-07-15 02:05 CST
 - **Commit**: 0183776 - fix: delete all related rows before user to avoid FK constraint
