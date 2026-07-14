@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_20)
+- **时间**: 2026-07-15 02:10 CST
+- **Commit**: 1a6ce59 - security: remove temporary reset-bootstrap endpoint
+- **构建产物**: 5.1M
+- **变更**: security: remove temporary reset-bootstrap endpoint
+
+
 ## Alpha 0.0.1 (build_260714_19)
 - **时间**: 2026-07-15 02:07 CST
 - **Commit**: 6feccc9 - fix: correct audit_logs column names for reset
