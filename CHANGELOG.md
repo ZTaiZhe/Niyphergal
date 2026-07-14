@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_1)
+- **时间**: 2026-07-14 22:24 CST
+- **Commit**: 17da7db - feat: add study schedule cloud deployment
+- **构建产物**: 5.1M
+- **变更**: feat: add study schedule cloud deployment
+
+
 ## Alpha 0.0.1 (build_260609_5)
 - **时间**: 2026-06-10 02:08 CST
 - **Commit**: 06ab17f - chore: add no-emoji rule to project rules
