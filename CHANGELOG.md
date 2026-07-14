@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_18)
+- **时间**: 2026-07-15 02:05 CST
+- **Commit**: 0183776 - fix: delete all related rows before user to avoid FK constraint
+- **构建产物**: 5.1M
+- **变更**: fix: delete all related rows before user to avoid FK constraint
+
+
 ## Alpha 0.0.1 (build_260714_17)
 - **时间**: 2026-07-15 02:03 CST
 - **Commit**: 1fa54c2 - debug: better error reporting for reset-bootstrap
