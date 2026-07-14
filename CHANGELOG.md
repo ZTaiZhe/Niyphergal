@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_9)
+- **时间**: 2026-07-15 00:07 CST
+- **Commit**: 26f07b7 - chore: redeploy with updated bootstrap invite
+- **构建产物**: 5.1M
+- **变更**: chore: redeploy with updated bootstrap invite
+
+
 ## Alpha 0.0.1 (build_260714_8)
 - **时间**: 2026-07-14 23:57 CST
 - **Commit**: 195b204 - fix: restore empty API origin marker for deploy-time injection
