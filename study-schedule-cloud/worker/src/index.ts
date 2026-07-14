@@ -43,6 +43,7 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
   if (url.pathname === "/api/auth/bootstrap-register" && request.method === "POST") return bootstrapRegister(request, env, body as any);
   if (url.pathname === "/api/auth/register" && request.method === "POST") return register(request, env, body as any);
   if (url.pathname === "/api/auth/login" && request.method === "POST") return login(request, env, body as any);
+  if (url.pathname === "/api/debug" && request.method === "GET") return json({ bootstrap_invite_len: env.BOOTSTRAP_INVITE?.length ?? -1, pbkdf2: env.PBKDF2_ITERATIONS, allowed_origins: env.ALLOWED_ORIGINS, env_keys: Object.keys(env).filter(k => !k.startsWith("_")) });
   const session = await activeSession(request, env.DB);
   if (url.pathname === "/api/auth/session" && request.method === "GET") return session ? json({ ok: true, user: session.user }) : error("AUTH_REQUIRED", "需要登录", 401);
   if (!session) return error("AUTH_REQUIRED", "需要登录", 401);
