@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_2)
+- **时间**: 2026-07-14 22:31 CST
+- **Commit**: 898bbe4 - ci: deploy study schedule cloud on relevant pushes
+- **构建产物**: 5.1M
+- **变更**: ci: deploy study schedule cloud on relevant pushes
+
+
 ## Alpha 0.0.1 (build_260714_1)
 - **时间**: 2026-07-14 22:24 CST
 - **Commit**: 17da7db - feat: add study schedule cloud deployment
