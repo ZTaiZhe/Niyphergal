@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_8)
+- **时间**: 2026-07-14 23:57 CST
+- **Commit**: 195b204 - fix: restore empty API origin marker for deploy-time injection
+- **构建产物**: 5.1M
+- **变更**: fix: restore empty API origin marker for deploy-time injection
+
+
 ## Alpha 0.0.1 (build_260714_7)
 - **时间**: 2026-07-14 23:49 CST
 - **Commit**: 20f9c35 - chore: trigger deploy with updated D1 token permissions
