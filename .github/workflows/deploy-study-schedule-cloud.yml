@@ -2,6 +2,12 @@ name: Deploy Study Schedule Cloud
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "study-schedule-cloud/**"
+      - ".github/workflows/deploy-study-schedule-cloud.yml"
 
 concurrency:
   group: deploy-study-schedule-cloud
