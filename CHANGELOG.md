@@ -1,5 +1,12 @@
 # Niyphergal 更新日志
 
+## Alpha 0.0.1 (build_260714_14)
+- **时间**: 2026-07-15 01:12 CST
+- **Commit**: a65e82c - fix: reduce PBKDF2 iterations to 100000 (Workers runtime limit) and remove debug endpoints
+- **构建产物**: 5.1M
+- **变更**: fix: reduce PBKDF2 iterations to 100000 (Workers runtime limit) and remove debug endpoints
+
+
 ## Alpha 0.0.1 (build_260714_13)
 - **时间**: 2026-07-15 01:09 CST
 - **Commit**: 471ab5d - debug: check bootstrap_state and actual hash in diag
